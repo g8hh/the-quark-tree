@@ -951,7 +951,7 @@ addLayer("s", {
 				return cost
 			},
 			effect(){
-				let eff = new Decimal(0)
+				let eff = new Decimal(1)
 				if(hasUpgrade("s",22)){eff = new Decimal(player.s.points).add(1)}
 				return eff
 			},
