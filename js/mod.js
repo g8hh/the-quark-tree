@@ -17,7 +17,7 @@ let VERSION = {
 	name: "夸克碎片化",
 }
 
-let changelog = `<h1>更新日志(上次更新:2021/12/4):</h1><br>
+let changelog = `<h1>更新日志(上次更新:2021/12/5):</h1><br>
 	<h3>v0.121</h3><br>
 	<li>修复一开始无法获得宇宙泡沫的bug<br>
 	<h3>v0.12 夸克碎片化</h3><br>
