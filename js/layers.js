@@ -29,6 +29,7 @@ addLayer("qu", {
 			setBuyableAmount("qu",11, new Decimal(0))
 			setBuyableAmount("qu",12, new Decimal(0))
 			setBuyableAmount("qu",13, new Decimal(0))
+			setBuyableAmount("qu",21, new Decimal(0))
 			player.qu.points = new Decimal(player.qu.goals[0])
 			player.qu.tip = new Decimal(0)
 			if(!hasChallenge("cb",11)){player.cb.points = new Decimal(0)}
