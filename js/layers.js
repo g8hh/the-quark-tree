@@ -661,7 +661,7 @@ addLayer("b", {
     row: 1,
     layerShown(){return getBuyableAmount("qu",11).gte(2)},
 	update(diff){
-		player.b.pointsadd = new Decimal(1).add(player.b.points).add(player.b.booster).add(player.b.booster2).pow(Decimal.add(1).add(upgradeEffect("b",13)))
+		player.b.pointsadd = new Decimal(1).add(player.b.points).add(player.b.booster).add(player.b.booster2).pow(Decimal.add(3).add(upgradeEffect("b",13)))
 		player.b.booster = new Decimal(0).max(player.b.energy.pow(0.5).pow(0.65).sub(1),0).min(Decimal.add(30).add(player.b.energy.log(2)))
 		if(hasUpgrade("s",14)){player.b.booster2 = new Decimal(player.b.booster).div(10)}
 		player.b.energyget = new Decimal(getBuyableAmount("qu", 13)).pow(Decimal.add(1.25).add(getBuyableAmount("qu", 13).mul(0.05))).mul(upgradeEffect("b",14)).mul(upgradeEffect("b",22)).mul(upgradeEffect("s",22))
