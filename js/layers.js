@@ -286,10 +286,10 @@ addLayer("cb", {
 		var s24 = hasUpgrade("s",24) ? new Decimal(1.5) : new Decimal(1)
 		var s25 = hasUpgrade("s",25) ? new Decimal(0.75) : new Decimal(1)
 		var pointsgetformula = new Decimal(0).add(upgradeEffect("cb", 11)).add(upgradeEffect("cb", 12)).mul(upgradeEffect("cb", 13)).mul(upgradeEffect("cb", 21)).mul(buyableEffect("qu", 12)).mul(player.b.pointsadd).pow(s24).pow(s25)
-		var pointsboosterformula = new Decimal.min(Decimal.add(2).pow(player.cb.points.pow(0.05).add(1)).mul(20).add(1),Decimal.add(10000).mul(player.cb.points.pow(0.01).add(1)))
+		var pointsboosterformula = new Decimal.min(Decimal.add(2).pow(player.cb.points.pow(0.05)).mul(20).add(1),Decimal.add(10000).mul(player.cb.points.pow(0.01)))
 		if(hasChallenge("cb",11)){player.cb.pointsbooster = new Decimal(pointsboosterformula)}
-		player.cb.pointsget = new Decimal(pointsgetformula).mul(player.cb.pointsbooster)
-		player.cb.pointsparticularly = new Decimal(pointsgetformula).mul(player.cb.pointsbooster).mul(0.1)
+		player.cb.pointsget = new Decimal(pointsgetformula).mul(player.cb.pointsbooster.add(1))
+		player.cb.pointsparticularly = new Decimal(pointsgetformula).mul(player.cb.pointsbooster.add(1)).mul(0.1)
 		if(!inChallenge("cb",11)){player.cb.points = player.cb.points.add(Decimal.add(player.cb.pointsget).mul(diff))}
 		if(!inChallenge("cb",11)){player.cb.points = player.cb.points.add(Decimal.add(player.cb.pointsparticularly).mul(diff))}
 		if(inChallenge("cb",11) && hasUpgrade("s",13)){player.cb.points = player.cb.points.add(Decimal.add(player.cb.pointsparticularly).pow(0.25).div(player.cb.points.add(1)).pow(upgradeEffect("cb",64)).mul(diff))}
@@ -310,7 +310,7 @@ addLayer("cb", {
 			cost: new Decimal(0),
 			effect(){
 				let eff = new Decimal(0)
-				if(hasUpgrade("cb",11)){eff = Decimal.add(1)}
+				if(hasUpgrade("cb",11)){eff = eff.add(1)}
 				return eff
 			},
 			effectDisplay() { return "+"+format(upgradeEffect(this.layer, this.id))+"宇宙泡沫获取" },
@@ -661,7 +661,7 @@ addLayer("b", {
     row: 1,
     layerShown(){return getBuyableAmount("qu",11).gte(2)},
 	update(diff){
-		player.b.pointsadd = new Decimal(1).add(player.b.points).add(player.b.booster).add(player.b.booster2).pow(Decimal.add(3).add(upgradeEffect("b",13)))
+		player.b.pointsadd = new Decimal(1).add(player.b.points).add(player.b.booster).add(player.b.booster2).pow(Decimal.add(1).add(upgradeEffect("b",13)))
 		player.b.booster = new Decimal(0).max(player.b.energy.pow(0.5).pow(0.65).sub(1),0).min(Decimal.add(30).add(player.b.energy.log(2)))
 		if(hasUpgrade("s",14)){player.b.booster2 = new Decimal(player.b.booster).div(10)}
 		player.b.energyget = new Decimal(getBuyableAmount("qu", 13)).pow(Decimal.add(1.25).add(getBuyableAmount("qu", 13).mul(0.05))).mul(upgradeEffect("b",14)).mul(upgradeEffect("b",22)).mul(upgradeEffect("s",22))
