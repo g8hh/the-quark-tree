@@ -13,11 +13,13 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.121",
+	num: "0.122",
 	name: "夸克碎片化",
 }
 
 let changelog = `<h1>更新日志(上次更新:2021/12/5):</h1><br>
+	<h3>v0.122 夸克碎片化</h3><br>
+	<li>修复数值bug<br>
 	<h3>v0.121 夸克碎片化</h3><br>
 	<li>修复一开始无法获得宇宙泡沫和无法获得增强能量的bug<br>
 	<h3>v0.12</h3><br>
