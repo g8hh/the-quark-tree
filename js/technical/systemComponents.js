@@ -111,6 +111,11 @@ var systemComponents = {
 		<span v-if="player.offTime !== undefined"  class="overlayThing">
 			<br>Offline Time: {{formatTime(player.offTime.remain)}}<br>
 		</span>
+		<span v-if="!options.cao && player.qu.points.gte(0)"  class="overlayThing">你有 {{format(player.qu.points,0)}} / {{format(player.qu.goals[0],0)}} 夸克<br></span>
+		<span v-if="!options.cao && player.cb.points.gte(0)"  class="overlayThing">你有 {{format(player.cb.points)}} / {{format(player.cb.pointscap)}}(软上限) 泡沫点数<br></span>
+		<span v-if="!options.cao && player.b.points.gte(0)"  class="overlayThing">你有 {{format(player.b.points)}} 增强器<br></span>
+		<span v-if="!options.cao && player.b.energy.gte(0)"  class="overlayThing">你有 {{format(player.b.energy)}} 增强器能量<br></span>
+		<span v-if="!options.cao && player.s.points.gte(0)"  class="overlayThing">你有 {{format(player.s.points)}} & {{format(getBuyableAmount("s",11),0)}} / 碎片 & 碎片阶级<br></span>
 		<span v-if="canGenPoints()"  class="overlayThing">({{tmp.other.oompsMag != 0 ? format(tmp.other.oomps) + " OOM" + (tmp.other.oompsMag < 0 ? "^OOM" : tmp.other.oompsMag > 1 ? "^" + tmp.other.oompsMag : "") + "s" : formatSmall(getPointGen())}}/sec)</span>
 		<div v-for="thing in tmp.displayThings" class="overlayThing"><span v-if="thing" v-html="thing"></span></div>
 	</div>
@@ -147,25 +152,27 @@ var systemComponents = {
         template: `
         <table>
             <tr>
-                <td><button class="opt" onclick="save()">Save</button></td>
-                <td><button class="opt" onclick="toggleOpt('autosave')">Autosave: {{ options.autosave?"ON":"OFF" }}</button></td>
-                <td><button class="opt" onclick="hardReset()">HARD RESET</button></td>
+                <td><button class="opt" onclick="save()">保存</button></td>
+                <td><button class="opt" onclick="toggleOpt('autosave')">自动保存: {{ options.autosave?"开":"关" }}</button></td>
+                <td><button class="opt" onclick="hardReset()">硬重置</button></td>
             </tr>
             <tr>
-                <td><button class="opt" onclick="exportSave()">Export to clipboard</button></td>
-                <td><button class="opt" onclick="importSave()">Import</button></td>
-                <td><button class="opt" onclick="toggleOpt('offlineProd')">Offline Prod: {{ options.offlineProd?"ON":"OFF" }}</button></td>
+                <td><button class="opt" onclick="exportSave()">导出到剪贴板</button></td>
+                <td><button class="opt" onclick="importSave()">导入</button></td>
+                <td><button class="opt" onclick="toggleOpt('offlineProd')">离线进度: {{ options.offlineProd?"开":"关" }}</button></td>
             </tr>
             <tr>
-                <td><button class="opt" onclick="switchTheme()">Theme: {{ getThemeName() }}</button></td>
-                <td><button class="opt" onclick="adjustMSDisp()">Show Milestones: {{ MS_DISPLAYS[MS_SETTINGS.indexOf(options.msDisplay)]}}</button></td>
-                <td><button class="opt" onclick="toggleOpt('hqTree')">High-Quality Tree: {{ options.hqTree?"ON":"OFF" }}</button></td>
+                <td><button class="opt" onclick="switchTheme()">主题: {{ getThemeName() }}</button></td>
+                <td><button class="opt" onclick="adjustMSDisp()">显示里程碑: {{ MS_DISPLAYS[MS_SETTINGS.indexOf(options.msDisplay)]}}</button></td>
+                <td><button class="opt" onclick="toggleOpt('hqTree')">高质量树: {{ options.hqTree?"开":"关" }}</button></td>
             </tr>
             <tr>
-                <td><button class="opt" onclick="toggleOpt('hideChallenges')">Completed Challenges: {{ options.hideChallenges?"HIDDEN":"SHOWN" }}</button></td>
-                <td><button class="opt" onclick="toggleOpt('forceOneTab'); needsCanvasUpdate = true">Single-Tab Mode: {{ options.forceOneTab?"ALWAYS":"AUTO" }}</button></td>
-				<td><button class="opt" onclick="toggleOpt('forceTooltips'); needsCanvasUpdate = true">Shift-Click to Toggle Tooltips: {{ options.forceTooltips?"ON":"OFF" }}</button></td>
-				</tr> 
+                <td><button class="opt" onclick="toggleOpt('hideChallenges')">显示完成的挑战: {{ options.hideChallenges?"显示":"隐藏" }}</button></td>
+                <td><button class="opt" onclick="toggleOpt('forceOneTab'); needsCanvasUpdate = true">单标签模式: {{ options.forceOneTab?"总是":"自动" }}</button></td>
+				<td><button class="opt" onclick="toggleOpt('forceTooltips'); needsCanvasUpdate = true">shift点击层来保留横幅显示: {{ options.forceTooltips?"开":"关" }}</button></td>
+			</tr>
+				<td><button class="opt" onclick="toggleOpt('cao')">显示便捷资源显示: {{ options.cao?"关":"开" }}</button></td>
+			<tr>
         </table>`
     },
 

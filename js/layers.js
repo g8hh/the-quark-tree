@@ -20,6 +20,9 @@ addLayer("qu", {
     }},
     color: "#ffffff",
     resource: "夸克",
+	tooltip() { 
+		return format(player.qu.points,0)+` / `+format(player.qu.goals[0],0)+` 夸克`
+	},
     type: "none",
     row: "side",
     layerShown(){return true},
@@ -38,6 +41,7 @@ addLayer("qu", {
 			player.b.booster = new Decimal(0)
 			player.s.points = new Decimal(0)
 			player.s.haveupgrades = new Decimal(0)
+			player.c.points = new Decimal(0)
 		},
 		respecText: "重置夸克购买",
 		11: {
@@ -265,6 +269,64 @@ addLayer("qu", {
 	]
 })
 
+addLayer("i", {
+    name: "inlay",
+    symbol: "I",
+    position: 1,
+    startData() { return {
+        unlocked: true,
+		points: new Decimal(0),
+		gamemode: new Decimal(0),
+		time: new Decimal(0),
+		timebest: new Decimal(0),
+    }},
+	
+    color: "#ffffff",    
+	nodeStyle: {
+        background: "linear-gradient(#c3c3c3 10%, #F0F0F0 30%, #fff200 50%, #8cfffb 70%, #0ed145 90%)",
+        "background-origin": "border-box",
+    },
+    resource: "镶嵌阶级",
+	tooltip() { 
+		return `镶嵌阶级`
+	},
+    type: "none",
+    row: "side",
+    layerShown(){return getBuyableAmount("qu",11).gte(4)},
+	update(diff){
+		if(player.i.gamemode.eq(1) && player.cb.points.gt(0)){player.i.time = player.i.time.add(Decimal.add(1).mul(diff))}
+		if(player.i.gamemode.eq(1)){player.cb.points = player.cb.points.sub(player.cb.points.pow(0.69).mul(player.i.time.pow(2)).mul(100).mul(diff))}
+	},
+	clickables:{
+		11:{
+			title: "进行镶嵌",
+			display() {return player.i.gamemode.eq(1) ? "已开启镶嵌" : ""},
+			canClick(){return true},
+			unlocked(){return true},
+			onClick(){
+				if(!player.i.gamemode.eq(0)){
+					player.i.gamemode = new Decimal(0)
+					player.i.timebest = new Decimal(player.i.time)
+				}else{
+					player.i.gamemode = new Decimal(1)
+				}
+				player.i.time = new Decimal(0)
+				return
+			},
+			style() {return {
+					background: "linear-gradient(#c3c3c3 10%, #F0F0F0 30%, #fff200 50%, #8cfffb 70%, #0ed145 90%)",
+					"background-origin": "border-box",
+				}
+			},
+		},
+	},
+	tabFormat: [
+		['display-text',function(){return `镶嵌挑战:<br>把你的物质镶嵌到夸克上<br>开启后每秒减少 (当前宇宙泡沫^0.69)*(开启时间^2)*100 宇宙泡沫且禁用宇宙泡沫获得<br>开启最大秒数达到 45 时可以完成下一阶段镶嵌,这将重置你除了镶嵌外的全部物品,但是获得镶嵌加成<br>已开启 `+format(player.i.time)+ ` 秒`}],
+		['display-text',function(){return player.i.timebest.gt(0) ? `最大 `+format(player.i.timebest)+ ` 秒` : ``}],
+		"clickables",
+	]
+})
+
 addLayer("cb", {
     name: "cosmic bubble",
     symbol: "CB",
@@ -291,8 +353,8 @@ addLayer("cb", {
 		if(hasChallenge("cb",11)){player.cb.pointsbooster = new Decimal(pointsboosterformula)}
 		player.cb.pointsget = new Decimal(pointsgetformula).mul(player.cb.pointsbooster.add(1))
 		player.cb.pointsparticularly = new Decimal(pointsgetformula).mul(player.cb.pointsbooster.add(1)).mul(0.1)
-		if(!inChallenge("cb",11)){player.cb.points = player.cb.points.add(Decimal.add(player.cb.pointsget).mul(diff))}
-		if(!inChallenge("cb",11)){player.cb.points = player.cb.points.add(Decimal.add(player.cb.pointsparticularly).mul(diff))}
+		if(!inChallenge("cb",11) && player.i.gamemode.eq(0)){player.cb.points = player.cb.points.add(Decimal.add(player.cb.pointsget).mul(diff))}
+		if(!inChallenge("cb",11) && player.i.gamemode.eq(0)){player.cb.points = player.cb.points.add(Decimal.add(player.cb.pointsparticularly).mul(diff))}
 		if(inChallenge("cb",11) && hasUpgrade("s",13)){player.cb.points = player.cb.points.add(Decimal.add(player.cb.pointsparticularly).pow(0.25).div(player.cb.points.add(1)).pow(upgradeEffect("cb",64)).mul(diff))}
 		if(inChallenge("cb",11) && hasUpgrade("cb",71)){player.cb.points = player.cb.points.add(Decimal.add(player.cb.pointsparticularly).pow(0.25).div(player.cb.points.add(1)).pow(upgradeEffect("cb",64)).mul(0.1).mul(diff))}
 		player.cb.pointscap = new Decimal("1e15")
@@ -592,7 +654,7 @@ addLayer("cb", {
 			title: "泡沫膨胀",
 			display() {return "获得100%宇宙泡沫"},
 			canClick(){return true},
-			unlocked(){return hasChallenge("cb",11)},
+			unlocked(){return hasChallenge("cb",11) && player.i.gamemode.eq(0)},
 			onClick(){
 				player.cb.points = player.cb.points.add(player.cb.pointsparticularly.add(player.cb.pointsget).mul(100))
 				return
@@ -1044,5 +1106,5 @@ addLayer("c", {
         return exp
     },
     row: 3, 
-    layerShown(){return getBuyableAmount("qu",11).gte(4)},
+    layerShown(){return getBuyableAmount("qu",11).gte(5)},
 })
