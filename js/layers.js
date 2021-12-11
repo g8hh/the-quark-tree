@@ -279,6 +279,7 @@ addLayer("i", {
 		gamemode: new Decimal(0),
 		time: new Decimal(0),
 		timebest: new Decimal(0),
+		stage: new Decimal(0),
     }},
 	
     color: "#ffffff",    
@@ -292,7 +293,7 @@ addLayer("i", {
 	},
     type: "none",
     row: "side",
-    layerShown(){return getBuyableAmount("qu",11).gte(4)},
+    layerShown(){return getBuyableAmount("qu",11).gte(4) || player.i.stage.gte(1)},
 	update(diff){
 		if(player.i.gamemode.eq(1) && player.cb.points.gt(0)){player.i.time = player.i.time.add(Decimal.add(1).mul(diff))}
 		if(player.i.gamemode.eq(1)){player.cb.points = player.cb.points.sub(player.cb.points.pow(0.69).mul(player.i.time.pow(2)).mul(100).mul(diff))}
@@ -319,11 +320,50 @@ addLayer("i", {
 				}
 			},
 		},
+		12:{
+			title: "完成镶嵌",
+			display() {return "泡沫获取增加20倍,永久保留镶嵌层,解锁珠宝镶嵌"},
+			canClick(){return true},
+			unlocked(){return !player.i.stage.gte(1)},
+			onClick(){
+				layerDataReset("cb")
+				layerDataReset("b")
+				layerDataReset("s")
+				layerDataReset("c")
+				layerDataReset("qu")
+				player.i.stage = new Decimal(1)
+				return
+			},
+		},
+	},
+	infoboxes: {
+		lore: {
+            title: "镶嵌挑战",
+            body() { return "镶嵌挑战,开启后会获得减益效果并获得镶嵌挑战开启时间,时间到达目标后即可完成镶嵌" },
+			unlocked(){return player.i.stage.gte(1)}
+        },
+		lore2: {
+            title: "开凿挑战",
+            body() { return "开启后重置除了镶嵌的所有和珠宝点数.在规定时间(为珠宝挑战的最大时长)达到目标即可开凿" },
+			unlocked(){return player.i.stage.gte(1)}
+        },
+		lore3: {
+            title: "珠宝镶嵌",
+            body() { return "镶嵌珠宝以来获取加成,开凿完珠宝后可以使用珠宝点数来雕刻珠宝来获取加成,但是珠宝会使珠宝获取变难( 珠宝获取/(1+珠宝) )且珠宝每级都会使珠宝雕刻成功率下降( 100%/(珠宝等级+1) )" },
+			unlocked(){return player.i.stage.gte(1)}
+        },
 	},
 	tabFormat: [
-		['display-text',function(){return `镶嵌挑战:<br>把你的物质镶嵌到夸克上<br>开启后每秒减少 (当前宇宙泡沫^0.69)*(开启时间^2)*100 宇宙泡沫且禁用宇宙泡沫获得<br>开启最大秒数达到 45 时可以完成下一阶段镶嵌,这将重置你除了镶嵌外的全部物品,但是获得镶嵌加成<br>已开启 `+format(player.i.time)+ ` 秒`}],
+		['infobox','lore3'],
+		['infobox','lore2'],
+		['infobox','lore'],
+		['display-text',function(){return `镶嵌挑战:<br>把你的物质镶嵌到夸克上<br>开启后每秒减少 (当前宇宙泡沫^0.69)*(开启时间^2)*100 宇宙泡沫且禁用宇宙泡沫获得<br>开启最大秒数达到 60 时可以完成下一阶段镶嵌,这将重置你除了镶嵌外的全部物品,但是获得镶嵌加成<br><br>已开启 `+format(player.i.time)+ ` 秒`}],
 		['display-text',function(){return player.i.timebest.gt(0) ? `最大 `+format(player.i.timebest)+ ` 秒` : ``}],
-		"clickables",
+		"blank",
+		['display-text',function(){return player.i.stage.gte(1) ? `泡沫获取增加20倍,永久保留镶嵌层,解锁珠宝镶嵌` : ``}],
+		"blank",
+		["row", [["clickable",11]]],
+		["row", [["clickable",12]]],
 	]
 })
 

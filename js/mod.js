@@ -13,12 +13,15 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.13",
+	num: "0.131",
 	name: "夸克镶嵌",
 }
 
 let changelog = `<h1>更新日志(上次更新:2021/12/9):</h1><br>
-	<h3>v0.13 夸克镶嵌</h3><br>
+	<h3>v0.131 夸克镶嵌</h3><br>
+	<li>补充镶嵌层设定,修改镶嵌层UI<br>
+	<li>快捷显示设置补充/完善<br>
+	<h3>v0.13</h3><br>
 	<li>关闭完整性层,取而代之的是镶嵌层<br>
 	<li>夸克横幅的字显示上限和等级<br>
 	<li>现在网页顶端会显示你所有的常用资源的数量,不过你可以在设置中关闭这些.<br>
