@@ -345,7 +345,6 @@ addLayer("i", {
 				let eff = new Decimal(x).pow(2).add(1)
 				return eff
 			},
-			unlocked(){return true},
 			style() {
 				return !player[this.layer].points.gte(this.cost()) && player.i.goals[0].gte(1) ? {'height': "120px", 'width': '250px', 'background-color': 'rgb(191,143,143)'} : player.i.goals[0].gte(1) ?  {'height': "120px", 'width': '250px', 'background-color': '#ffffff'} :  {'height': "120px", 'width': '120px', 'background-color': 'rgb(191,143,143)'}
 			},
@@ -378,7 +377,6 @@ addLayer("i", {
 				let eff = new Decimal(1.5).pow(x)
 				return eff
 			},
-			unlocked(){return true},
 			style() {
 				return !player[this.layer].points.gte(this.cost()) && player.i.goals[1].gte(1) ? {'height': "120px", 'width': '250px', 'background-color': 'rgb(191,143,143)'} : player.i.goals[1].gte(1) ?  {'height': "120px", 'width': '250px', 'background-color': '#4dabef'} :  {'height': "120px", 'width': '120px', 'background-color': 'rgb(191,143,143)'}
 			},
@@ -411,7 +409,6 @@ addLayer("i", {
 				let eff = new Decimal(x)
 				return eff
 			},
-			unlocked(){return true},
 			style() {
 				return !player[this.layer].points.gte(this.cost()) && player.i.goals[2].gte(1) ? {'height': "120px", 'width': '250px', 'background-color': 'rgb(191,143,143)'} : player.i.goals[2].gte(1) ?  {'height': "120px", 'width': '250px', 'background-color': '#4def52'} :  {'height': "120px", 'width': '120px', 'background-color': 'rgb(191,143,143)'}
 			},
@@ -444,7 +441,6 @@ addLayer("i", {
 				let eff = new Decimal(x).mul(2)
 				return eff
 			},
-			unlocked(){return true},
 			style() {
 				return !player[this.layer].points.gte(this.cost()) && player.i.goals[3].gte(1) ? {'height': "120px", 'width': '250px', 'background-color': 'rgb(191,143,143)'} : player.i.goals[3].gte(1) ?  {'height': "120px", 'width': '250px', 'background-color': '#ff3e3e'} :  {'height': "120px", 'width': '120px', 'background-color': 'rgb(191,143,143)'}
 			},
@@ -487,7 +483,7 @@ addLayer("i", {
 			title: "进行珠宝挑战",
 			display() {return player.i.gamemode.eq(2) ? "已开启珠宝挑战" : ""},
 			canClick(){return true},
-			unlocked(){return player.i.stage.gte(1) || player.i.gamemode.eq(2) || player.i.gamemode.eq(0)},
+			unlocked(){return player.i.stage.gte(1) && player.i.gamemode.eq(0) || player.i.gamemode.eq(2)},
 			onClick(){
 				if(!player.i.gamemode.eq(0)){
 					player.i.gamemode = new Decimal(0)
