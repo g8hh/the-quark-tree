@@ -472,7 +472,7 @@ addLayer("i", {
 			title: "完成镶嵌",
 			display() {return "泡沫获取增加20倍,永久保留镶嵌层,解锁珠宝镶嵌,珠宝获取+5"},
 			canClick(){return true},
-			unlocked(){return !player.i.stage.gte(1)},
+			unlocked(){return !player.i.stage.gte(1) || player.i.timebest.gte(60)},
 			onClick(){
 				player.i.timelast = new Decimal(0)
 				player.i.stage = new Decimal(1)
