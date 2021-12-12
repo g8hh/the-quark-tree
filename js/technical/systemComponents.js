@@ -111,11 +111,15 @@ var systemComponents = {
 		<span v-if="player.offTime !== undefined"  class="overlayThing">
 			<br>Offline Time: {{formatTime(player.offTime.remain)}}<br>
 		</span>
+		<span v-if="!options.tip" class="overlayThing">(tip:你可以在设置里关闭快捷资源显示,包括其单独项以及此提示)<br></span>
 		<span v-if="!options.all && !options.qu && player.qu.points.gt(0) || options.always_all && !options.qu" class="overlayThing">你有 {{format(player.qu.points,0)}} / {{format(player.qu.goals[0],0)}} 夸克<br></span>
 		<span v-if="!options.all && !options.cb && player.cb.points.gt(0) || options.always_all && !options.cb"  class="overlayThing">你有 {{format(player.cb.points)}} / {{format(player.cb.pointscap)}}(软上限) 泡沫点数<br></span>
 		<span v-if="!options.all && !options.b && player.b.points.gt(0) || options.always_all && !options.b"  class="overlayThing">你有 {{format(player.b.points)}} 增强器<br></span>
-		<span v-if="!options.all && !options.b_energy && player.b.energy.gt(0) || options.always_all && !options.b_energy"  class="overlayThing">你有 {{format(player.b.energy)}} 增强器能量<br></span>
+		<span v-if="!options.all && !options.b_energy && player.b.energy.gt(0) || options.always_all && !options.b_energy"  class="overlayThing">你有 {{format(player.b.energy)}} 增强能量<br></span>
+		<span v-if="!options.all && !options.b_energy2 && player.b.energy2.gt(0) || options.always_all && !options.b_energy2"  class="overlayThing">你有 {{format(player.b.energy2)}} 增强核能<br></span>
 		<span v-if="!options.all && !options.s && player.s.points.gt(0) || options.always_all && !options.s"  class="overlayThing">你有 {{format(player.s.points)}} & {{format(getBuyableAmount("s",11),0)}} / 碎片 & 碎片阶级<br></span>
+		<span v-if="!options.all && !options.i_landy && player.i.stage.gte(1) && player.i.gamemode.eq(2) || options.always_all && !options.i_landy"  class="overlayThing">你还有 {{format(player.i.timelast)}} 时间进行珠宝挑战<br></span>
+		<span v-if="!options.all && !options.i && player.i.points.gt(0) || options.always_all && !options.i"  class="overlayThing">你有 {{format(player.i.points)}} 珠宝点数<br></span>
 		<span v-if="canGenPoints()"  class="overlayThing">({{tmp.other.oompsMag != 0 ? format(tmp.other.oomps) + " OOM" + (tmp.other.oompsMag < 0 ? "^OOM" : tmp.other.oompsMag > 1 ? "^" + tmp.other.oompsMag : "") + "s" : formatSmall(getPointGen())}}/sec)</span>
 		<div v-for="thing in tmp.displayThings" class="overlayThing"><span v-if="thing" v-html="thing"></span></div>
 	</div>
@@ -171,9 +175,11 @@ var systemComponents = {
                 <td><button class="opt" onclick="toggleOpt('forceOneTab'); needsCanvasUpdate = true">单标签模式: {{ options.forceOneTab?"总是":"自动" }}</button></td>
 				<td><button class="optsub"class="opt" onclick="toggleOpt('forceTooltips'); needsCanvasUpdate = true">shift点击层来保留横幅显示: {{ options.forceTooltips?"开":"关" }}</button></td>
 			</tr>
+			<br>
 			<tr>
 				<td><button class="opt" onclick="toggleOpt('all')">显示便捷资源显示: {{ options.all?"关":"开" }}</button></td>
 				<td><button v-if="!options.all || options.always_all" class="opt" onclick="toggleOpt('always_all')">总是显示便捷资源显示(注:会剧透): {{ options.always_all?"开":"关" }}</button></td>
+				<td><button class="opt" onclick="toggleOpt('tip')">显示tip: {{ options.tip?"关":"开" }}</button></td>
 			</tr>
 			<tr>
 				<td><button v-if="!options.all && player.qu.points.gt(0) || options.always_all" class="optsub" onclick="toggleOpt('qu')">夸克快捷显示: {{ options.qu?"关":"开" }}</button></td>
@@ -183,7 +189,12 @@ var systemComponents = {
 			<tr>
 				<td><button v-if="!options.all && player.b.energy.gt(0) || options.always_all" class="optsub" onclick="toggleOpt('b_energy')">增强能量快捷显示: {{ options.b_energy?"关":"开" }}</button></td>
 				<td><button v-if="!options.all && player.s.points.gt(0) || options.always_all" class="optsub" onclick="toggleOpt('s')">碎片快捷显示: {{ options.s?"关":"开" }}</button></td>
+				<td><button v-if="!options.all && player.i.stage.gte(1) || options.always_all" class="optsub" onclick="toggleOpt('i_landy')">珠宝挑战剩余时间快捷显示: {{ options.i_landy?"关":"开" }}</button></td>
+			</tr>
 			<tr>
+				<td><button v-if="!options.all && player.i.points.gt(0) || options.always_all" class="optsub" onclick="toggleOpt('i')">珠宝点数快捷显示: {{ options.i?"关":"开" }}</button></td>
+				<td><button v-if="!options.all && player.b.energy2.gt(0) || options.always_all" class="optsub" onclick="toggleOpt('b_energy2')">增强核能快捷显示: {{ options.b_energy2?"关":"开" }}</button></td>
+			</tr>
         </table>`
     },
 

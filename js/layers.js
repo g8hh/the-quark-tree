@@ -46,7 +46,7 @@ addLayer("qu", {
 		respecText: "重置夸克购买",
 		11: {
 			cost(x) { 
-				return new Decimal(x).mul(2).pow(2).add(x)
+				return new Decimal.max(Decimal.add(x).mul(2).pow(2).add(x).sub(buyableEffect("i",142)).sub(upgradeEffect("s",25)),0)
 			},
 			title:"夸克购买I 阶层",
 			display() { return "解锁一个新层<br><br>"+"需要:"+format(this.cost(),0)+"夸克<br>目前数量:"+format(getBuyableAmount(this.layer, this.id),0)+"个<br>目前效果:<br>+"+format(getBuyableAmount(this.layer, this.id),0)+"阶层"},
@@ -74,6 +74,7 @@ addLayer("qu", {
 				eff = eff.pow(x)
 				if(hasUpgrade("cb",61)){eff = eff.pow(1.5)}
 				if(hasUpgrade("cb",25)){eff = eff.pow(1.5)}
+				eff = eff.pow(buyableEffect("i",122))
 				return eff
 			},
 			unlocked(){return hasUpgrade("cb",14) || getBuyableAmount(this.layer, this.id).gte(1)},
@@ -127,14 +128,14 @@ addLayer("qu", {
 			width: 500,
 			height: 50,
 			progress() { return {} },
-			unlocked(){return getBuyableAmount("qu",11).gte(1) || hasUpgrade("cb",11)},
+			unlocked(){return getBuyableAmount("qu",11).gte(1) && !inChallenge("cb",11) || hasUpgrade("cb",11) && !inChallenge("cb",11)},
 			goal(){
 				let goal = Decimal.add(10).mul(player.qu.goals[1]).pow(Decimal.add(2).mul(player.qu.goals[1]).mul(0.595))
 				if(hasUpgrade("cb",15)){goal = goal.pow(0.5)}
 				return goal
 			},
 			progress(){
-				if(player.cb.points.gte(this.goal())){
+				if(player.cb.points.gte(this.goal()) && !inChallenge("cb",11)){
 					player.qu.goals[1] = player.qu.goals[1].add(1)
 					player.qu.goals[0] = player.qu.goals[0].add(1)
 					player.qu.points = player.qu.points.add(1)
@@ -158,13 +159,13 @@ addLayer("qu", {
 			width: 500,
 			height: 50,
 			progress() { return {} },
-			unlocked(){return getBuyableAmount("qu",11).gte(2)},
+			unlocked(){return getBuyableAmount("qu",11).gte(2) && !inChallenge("cb",11)},
 			goal(){
 				let goal = Decimal.add(1).mul(player.qu.goals[2].add(1).mul(4)).pow(Decimal.add(1).add(player.qu.goals[2].mul(0.1)))
 				return goal
 			},
 			progress(){
-				if(player.b.pointsadd.gte(this.goal())){
+				if(player.b.pointsadd.gte(this.goal()) && !inChallenge("cb",11)){
 					player.qu.goals[2] = player.qu.goals[2].add(1)
 					player.qu.goals[0] = player.qu.goals[0].add(1)
 					player.qu.points = player.qu.points.add(1)
@@ -188,13 +189,13 @@ addLayer("qu", {
 			width: 500,
 			height: 50,
 			progress() { return {} },
-			unlocked(){return getBuyableAmount("qu",11).gte(3)},
+			unlocked(){return getBuyableAmount("qu",11).gte(3) && !inChallenge("cb",11)},
 			goal(){
 				let goal = Decimal.add(2).pow(player.qu.goals[3].div(3))
 				return goal
 			},
 			progress(){
-				if(player.s.haveupgrades.gte(this.goal())){
+				if(player.s.haveupgrades.gte(this.goal()) && !inChallenge("cb",11)){
 					player.qu.goals[3] = player.qu.goals[3].add(3)
 					player.qu.goals[0] = player.qu.goals[0].add(3)
 					player.qu.points = player.qu.points.add(3)
@@ -218,13 +219,13 @@ addLayer("qu", {
 			width: 500,
 			height: 50,
 			progress() { return {} },
-			unlocked(){return hasUpgrade("b",15) && getBuyableAmount("qu",11).gte(2)},
+			unlocked(){return hasUpgrade("b",15) && getBuyableAmount("qu",11).gte(2) && !inChallenge("cb",11)},
 			goal(){
 				let goal = Decimal.add(12).mul(player.qu.goals[4].add(1).pow(0.5))
 				return goal
 			},
 			progress(){
-				if(player.b.points.gte(this.goal()) && hasUpgrade("b",15)){
+				if(player.b.points.gte(this.goal()) && hasUpgrade("b",15) && !inChallenge("cb",11)){
 					player.qu.goals[4] = player.qu.goals[4].add(1)
 					player.qu.goals[0] = player.qu.goals[0].add(1)
 					player.qu.points = player.qu.points.add(1)
@@ -249,7 +250,8 @@ addLayer("qu", {
 		['display-text',function(){return `<h6>tip:夸克购买重置会保留所有层的升级<br><h6>`}],
 		['display-text',function(){return `<h6>tip2:你需要总共 `+format(player.qu.tip,0)+` 个夸克才能购买下个夸克购买I<br><h6>`}],
 		['display-text',function(){return hasUpgrade("cb",14) || getBuyableAmount("qu",12).gte(1) ? `<h6>tip3:当你拥有一个类型的夸克购买项之后它将持续解锁(如:你有一个夸克购买II,即使你没有'夸克魔力'升级夸克购买II也会持续解锁)<br><h6>` : ``}],
-		['display-text',function(){return hasChallenge("cb",12) ? `<h6>tip4:在挑战'无增强'中无法获得根据增强器数量获得夸克的进度<br><h6>` : ``}],
+		['display-text',function(){return hasChallenge("cb",12) ? `<h6>tip4:在挑战中无法获得获得夸克的进度<br><h6>` : ``}],
+		['display-text',function(){return getBuyableAmount("i",142).gte(1) ? `<h6>tip5:夸克购买项消耗无法成为负数<br><h6>` : ``}],
 		"blank",
 		"blank",
 		"blank",
@@ -276,10 +278,13 @@ addLayer("i", {
     startData() { return {
         unlocked: true,
 		points: new Decimal(0),
+		pointsget: new Decimal(0),
 		gamemode: new Decimal(0),
 		time: new Decimal(0),
 		timebest: new Decimal(0),
+		timelast: new Decimal(0.00001),
 		stage: new Decimal(0),
+		goals: [new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0)],
     }},
 	
     color: "#ffffff",    
@@ -289,21 +294,168 @@ addLayer("i", {
     },
     resource: "镶嵌阶级",
 	tooltip() { 
-		return `镶嵌阶级`
+		return player.i.stage.gte(1) ? `镶嵌阶级<br>`+format(player.i.points)+` 珠宝点数` : `镶嵌阶级` 
 	},
     type: "none",
     row: "side",
     layerShown(){return getBuyableAmount("qu",11).gte(4) || player.i.stage.gte(1)},
 	update(diff){
+		var pointsgetformula = new Decimal(5).mul(buyableEffect("i",112)).div(player.i.points.add(1))
+		player.i.pointsget = new Decimal(pointsgetformula)
+		if(player.i.stage.gte(1) && player.i.timelast.gt(0)){player.i.points = player.i.points.add(pointsgetformula.mul(diff))}
 		if(player.i.gamemode.eq(1) && player.cb.points.gt(0)){player.i.time = player.i.time.add(Decimal.add(1).mul(diff))}
 		if(player.i.gamemode.eq(1)){player.cb.points = player.cb.points.sub(player.cb.points.pow(0.69).mul(player.i.time.pow(2)).mul(100).mul(diff))}
+		if(player.i.gamemode.eq(2) && player.i.timelast.gt(0)){player.i.timelast = player.i.timelast.sub(Decimal.add(1).mul(diff))}
+		if(!player.i.timelast.gt(0)){
+			player.i.timelast = new Decimal(0.00001)
+			player.i.gamemode = new Decimal(0)
+			layerDataReset("cb")
+			layerDataReset("b")
+			layerDataReset("s")
+			layerDataReset("c")
+			layerDataReset("qu")
+		}
+	},
+	buyables:{
+		112:{
+			title: "白宝石雕刻",
+			display() {
+				let effect = "宝石获取 *"+format(buyableEffect(this.layer, this.id))
+				let need = "<br><br>需求:"+format(this.cost())+"珠宝点数"
+				let need2 = "<br>成功概率:"+format(Decimal.add(100).div(getBuyableAmount(this.layer, this.id).add(1)),3)+"%"
+				return player.i.goals[0].gte(1) ? effect + need + need2 : "未解锁"
+			},
+			unlocked(){return player.i.stage.gte(1)},
+			onClick(){
+				return
+			},
+			cost(x) { 
+				return new Decimal(2).pow(Decimal.add(x).add(1)).mul(0.98)
+			},
+			canAfford() { return player[this.layer].points.gte(this.cost()) && player.i.goals[0].gte(1)},
+			buy(x) {
+				player.i.points = player.i.points.sub(this.cost())
+				let inlay = Math.floor(Math.random() * 100000)
+				let row = new Decimal(100000).div(getBuyableAmount(this.layer, this.id).add(1))
+				if(inlay < row){
+					setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+				}
+			},
+			effect(x){
+				let eff = new Decimal(x).pow(2).add(1)
+				return eff
+			},
+			unlocked(){return true},
+			style() {
+				return !player[this.layer].points.gte(this.cost()) && player.i.goals[0].gte(1) ? {'height': "120px", 'width': '250px', 'background-color': 'rgb(191,143,143)'} : player.i.goals[0].gte(1) ?  {'height': "120px", 'width': '250px', 'background-color': '#ffffff'} :  {'height': "120px", 'width': '120px', 'background-color': 'rgb(191,143,143)'}
+			},
+		},
+		122:{
+			title: "蓝宝石雕刻",
+			display() {
+				let effect = "夸克购买II效果 ^"+format(buyableEffect(this.layer, this.id))
+				let need = "<br><br>需求:"+format(this.cost())+"珠宝点数"
+				let need2 = "<br>成功概率:"+format(Decimal.add(100).div(getBuyableAmount(this.layer, this.id).add(1)),3)+"%"
+				return player.i.goals[1].gte(1) ? effect + need + need2 : "未解锁"
+			},
+			unlocked(){return player.i.stage.gte(1)},
+			onClick(){
+				return
+			},
+			cost(x) { 
+				return new Decimal(11).pow(Decimal.add(x).add(1)).mul(1.48)
+			},
+			canAfford() { return player[this.layer].points.gte(this.cost()) && player.i.goals[1].gte(1)},
+			buy(x) {
+				player.i.points = player.i.points.sub(this.cost())
+				let inlay = Math.floor(Math.random() * 100000)
+				let row = new Decimal(100000).div(getBuyableAmount(this.layer, this.id).add(1))
+				if(inlay < row){
+					setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+				}
+			},
+			effect(x){
+				let eff = new Decimal(1.5).pow(x)
+				return eff
+			},
+			unlocked(){return true},
+			style() {
+				return !player[this.layer].points.gte(this.cost()) && player.i.goals[1].gte(1) ? {'height': "120px", 'width': '250px', 'background-color': 'rgb(191,143,143)'} : player.i.goals[1].gte(1) ?  {'height': "120px", 'width': '250px', 'background-color': '#4dabef'} :  {'height': "120px", 'width': '120px', 'background-color': 'rgb(191,143,143)'}
+			},
+		},
+		132:{
+			title: "绿宝石雕刻",
+			display() {
+				let effect = "增强核能生产 +"+format(buyableEffect(this.layer, this.id))
+				let need = "<br><br>需求:"+format(this.cost())+"珠宝点数"
+				let need2 = "<br>成功概率:"+format(Decimal.add(100).div(getBuyableAmount(this.layer, this.id).add(1)),3)+"%"
+				return player.i.goals[2].gte(1) ? effect + need + need2 : "未解锁"
+			},
+			unlocked(){return player.i.stage.gte(1)},
+			onClick(){
+				return
+			},
+			cost(x) { 
+				return new Decimal(x).mul(Decimal.add(x).mul(2.34)).add(20).pow(1.15)
+			},
+			canAfford() { return player[this.layer].points.gte(this.cost()) && player.i.goals[2].gte(1)},
+			buy(x) {
+				player.i.points = player.i.points.sub(this.cost())
+				let inlay = Math.floor(Math.random() * 100000)
+				let row = new Decimal(100000).div(getBuyableAmount(this.layer, this.id).add(1))
+				if(inlay < row){
+					setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+				}
+			},
+			effect(x){
+				let eff = new Decimal(x)
+				return eff
+			},
+			unlocked(){return true},
+			style() {
+				return !player[this.layer].points.gte(this.cost()) && player.i.goals[2].gte(1) ? {'height': "120px", 'width': '250px', 'background-color': 'rgb(191,143,143)'} : player.i.goals[2].gte(1) ?  {'height': "120px", 'width': '250px', 'background-color': '#4def52'} :  {'height': "120px", 'width': '120px', 'background-color': 'rgb(191,143,143)'}
+			},
+		},
+		142:{
+			title: "红宝石雕刻",
+			display() {
+				let effect = "夸克购买项I价格 -"+format(buyableEffect(this.layer, this.id))
+				let need = "<br><br>需求:"+format(this.cost())+"珠宝点数"
+				let need2 = "<br>成功概率:"+format(Decimal.add(100).div(getBuyableAmount(this.layer, this.id).add(1)),3)+"%"
+				return player.i.goals[3].gte(1) ? effect + need + need2 : "未解锁"
+			},
+			unlocked(){return player.i.stage.gte(1)},
+			onClick(){
+				return
+			},
+			cost(x) { 
+				return new Decimal(13).pow(Decimal.add(x).add(0.35)).mul(1.31)
+			},
+			canAfford() { return player[this.layer].points.gte(this.cost()) && player.i.goals[3].gte(1)},
+			buy(x) {
+				player.i.points = player.i.points.sub(this.cost())
+				let inlay = Math.floor(Math.random() * 100000)
+				let row = new Decimal(100000).div(getBuyableAmount(this.layer, this.id).add(1))
+				if(inlay < row){
+					setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+				}
+			},
+			effect(x){
+				let eff = new Decimal(x).mul(2)
+				return eff
+			},
+			unlocked(){return true},
+			style() {
+				return !player[this.layer].points.gte(this.cost()) && player.i.goals[3].gte(1) ? {'height': "120px", 'width': '250px', 'background-color': 'rgb(191,143,143)'} : player.i.goals[3].gte(1) ?  {'height': "120px", 'width': '250px', 'background-color': '#ff3e3e'} :  {'height': "120px", 'width': '120px', 'background-color': 'rgb(191,143,143)'}
+			},
+		},
 	},
 	clickables:{
 		11:{
 			title: "进行镶嵌",
 			display() {return player.i.gamemode.eq(1) ? "已开启镶嵌" : ""},
 			canClick(){return true},
-			unlocked(){return true},
+			unlocked(){return player.i.gamemode.eq(2) || player.i.gamemode.eq(0)},
 			onClick(){
 				if(!player.i.gamemode.eq(0)){
 					player.i.gamemode = new Decimal(0)
@@ -322,17 +474,135 @@ addLayer("i", {
 		},
 		12:{
 			title: "完成镶嵌",
-			display() {return "泡沫获取增加20倍,永久保留镶嵌层,解锁珠宝镶嵌"},
+			display() {return "泡沫获取增加20倍,永久保留镶嵌层,解锁珠宝镶嵌,珠宝获取+5"},
 			canClick(){return true},
 			unlocked(){return !player.i.stage.gte(1)},
 			onClick(){
-				layerDataReset("cb")
-				layerDataReset("b")
-				layerDataReset("s")
-				layerDataReset("c")
-				layerDataReset("qu")
+				player.i.timelast = new Decimal(0)
 				player.i.stage = new Decimal(1)
 				return
+			},
+		},
+		13:{
+			title: "进行珠宝挑战",
+			display() {return player.i.gamemode.eq(2) ? "已开启珠宝挑战" : ""},
+			canClick(){return true},
+			unlocked(){return player.i.stage.gte(1) || player.i.gamemode.eq(2) || player.i.gamemode.eq(0)},
+			onClick(){
+				if(!player.i.gamemode.eq(0)){
+					player.i.gamemode = new Decimal(0)
+					player.i.timelast = new Decimal(0)
+				}else{
+					layerDataReset("cb")
+					layerDataReset("b")
+					layerDataReset("s")
+					layerDataReset("c")
+					layerDataReset("qu")
+					player.i.gamemode = new Decimal(2)
+					player.i.timelast = new Decimal(player.i.timebest)
+					player.i.points = new Decimal(0)
+				}
+				return
+			},
+		},
+		21:{
+			title: "白宝石镶嵌",
+			display() {return player.i.points.gte(25) ? "可以镶嵌" : "未达成目标"},
+			canClick(){return player.i.points.gte(25)},
+			unlocked(){return player.i.gamemode.eq(2) && player.i.goals[0].eq(0)},
+			onClick(){
+				player.i.goals[0] = new Decimal(1)
+				return
+			},
+			style() {
+				return player.i.points.gte(25) ?  {'background-color': '#ffffff'} :  {'background-color': 'rgb(191,143,143)'}
+			},
+		},
+		22:{
+			title: "蓝宝石镶嵌",
+			display() {return player.cb.points.gte(5e10) ? "可以镶嵌" : "未达成目标"},
+			canClick(){return player.cb.points.gte(5e10)},
+			unlocked(){return player.i.gamemode.eq(2) && player.i.goals[1].eq(0)},
+			onClick(){
+				player.i.goals[1] = new Decimal(1)
+				return
+			},
+			style() {
+				return player.cb.points.gte(5e10) ?  {'background-color': '#ffffff'} :  {'background-color': 'rgb(191,143,143)'}
+			},
+		},
+		23:{
+			title: "绿宝石镶嵌",
+			display() {return player.b.energy.gte(175) ? "可以镶嵌" : "未达成目标"},
+			canClick(){return player.b.energy.gte(175)},
+			unlocked(){return player.i.gamemode.eq(2) && player.i.goals[2].eq(0)},
+			onClick(){
+				player.i.goals[2] = new Decimal(1)
+				return
+			},
+			style() {
+				return player.b.energy.gte(175) ?  {'background-color': '#ffffff'} :  {'background-color': 'rgb(191,143,143)'}
+			},
+		},
+		24:{
+			title: "红宝石镶嵌",
+			display() {return getBuyableAmount("qu",11).gte(3) ? "可以镶嵌" : "未达成目标"},
+			canClick(){return getBuyableAmount("qu",11).gte(3)},
+			unlocked(){return player.i.gamemode.eq(2) && player.i.goals[3].eq(0)},
+			onClick(){
+				player.i.goals[3] = new Decimal(1)
+				return
+			},
+			style() {
+				return getBuyableAmount("qu",11).gte(3) ?  {'background-color': '#ffffff'} :  {'background-color': 'rgb(191,143,143)'}
+			},
+		},
+		111:{
+			title: "白宝石",
+			display() {return player.i.goals[0].gte(1) ? "等级 "+format(getBuyableAmount("i", 112),0)+"<br>阶级 "+format(player.i.goals[0],0) : "未解锁"},
+			canClick(){return player.i.goals[0].gte(1)},
+			unlocked(){return player.i.stage.gte(1)},
+			onClick(){
+				return
+			},
+			style() {
+				return player.i.goals[0].gte(1) ?  {'background-color': '#ffffff'} :  {'background-color': 'rgb(191,143,143)'}
+			},
+		},
+		121:{
+			title: "蓝宝石",
+			display() {return player.i.goals[1].gte(1) ? "等级 "+format(getBuyableAmount("i", 122),0)+"<br>阶级 "+format(player.i.goals[0],0) : "未解锁"},
+			canClick(){return player.i.goals[1].gte(1)},
+			unlocked(){return player.i.stage.gte(1)},
+			onClick(){
+				return
+			},
+			style() {
+				return player.i.goals[1].gte(1) ?  {'background-color': '#4dabef'} :  {'background-color': 'rgb(191,143,143)'}
+			},
+		},
+		131:{
+			title: "绿宝石",
+			display() {return player.i.goals[2].gte(1) ? "等级 "+format(getBuyableAmount("i", 132),0)+"<br>阶级 "+format(player.i.goals[0],0) : "未解锁"},
+			canClick(){return player.i.goals[2].gte(1)},
+			unlocked(){return player.i.stage.gte(1)},
+			onClick(){
+				return
+			},
+			style() {
+				return player.i.goals[2].gte(1) ?  {'background-color': '#4def52'} :  {'background-color': 'rgb(191,143,143)'}
+			},
+		},
+		141:{
+			title: "红宝石",
+			display() {return player.i.goals[3].gte(1) ? "等级 "+format(getBuyableAmount("i", 142),0)+"<br>阶级 "+format(player.i.goals[0],0) : "未解锁"},
+			canClick(){return player.i.goals[3].gte(1)},
+			unlocked(){return player.i.stage.gte(1)},
+			onClick(){
+				return
+			},
+			style() {
+				return player.i.goals[3].gte(1) ?  {'background-color': '#ff3e3e'} :  {'background-color': 'rgb(191,143,143)'}
 			},
 		},
 	},
@@ -355,12 +625,29 @@ addLayer("i", {
 	},
 	tabFormat: [
 		['infobox','lore3'],
+		"blank",
+		['display-text',function(){return player.i.stage.gte(1) ? `你有 `+format(player.i.points)+` 珠宝点数<br>你每秒获得 `+format(player.i.pointsget)+` 珠宝点数` : ``}],
+		"blank",
+		["row", [["clickable",111],["buyable",112]]],
+		["row", [["clickable",121],["buyable",122]]],
+		["row", [["clickable",131],["buyable",132]]],
+		["row", [["clickable",141],["buyable",142]]],
 		['infobox','lore2'],
+		['display-text',function(){return player.i.stage.gte(1) ? `宝石挑战:<br>开凿完肯定需要镶嵌对吧<br>开启后重置除了镶嵌的所有和珠宝点数,并开始倒计时,此时可开凿珠宝,一旦倒计时结束将再次进行一次重置并退出珠宝挑战` : ``}],
+		['display-text',function(){return player.i.stage.gte(1) ? `白宝石:25 珠宝<br>蓝宝石:5e10 宇宙泡沫<br>绿宝石:175 增强能量<br>红宝石:3 夸克购买项I` : ``}],
+		"blank",
+		['display-text',function(){return player.i.stage.gte(1) ? `剩余 `+format(player.i.timelast)+ ` 秒` : ``}],
+		["row", [["clickable",13]]],
+		["row", [["clickable",21],["clickable",22],["clickable",23],["clickable",24]]],
 		['infobox','lore'],
-		['display-text',function(){return `镶嵌挑战:<br>把你的物质镶嵌到夸克上<br>开启后每秒减少 (当前宇宙泡沫^0.69)*(开启时间^2)*100 宇宙泡沫且禁用宇宙泡沫获得<br>开启最大秒数达到 60 时可以完成下一阶段镶嵌,这将重置你除了镶嵌外的全部物品,但是获得镶嵌加成<br><br>已开启 `+format(player.i.time)+ ` 秒`}],
+		['display-text',function(){return `镶嵌挑战:<br>把你的物质镶嵌到夸克上<br>开启后每秒减少 (当前宇宙泡沫^0.69)*(开启时间^2)*100 宇宙泡沫且禁用宇宙泡沫获得`}],
+		['display-text',function(){return `开启最大秒数达到 60 时可以完成下一阶段镶嵌,这将重置你除了镶嵌外的全部物品,但是获得镶嵌加成`}],
+		['display-text',function(){return player.i.stage.gte(1) ? `开启最大秒数达到 1.79e308 时可以完成下一阶段镶嵌,这将重置你除了镶嵌外的全部物品,但是获得镶嵌加成` : ``}],
+		"blank",
+		['display-text',function(){return `已开启 `+format(player.i.time)+ ` 秒`}],
 		['display-text',function(){return player.i.timebest.gt(0) ? `最大 `+format(player.i.timebest)+ ` 秒` : ``}],
 		"blank",
-		['display-text',function(){return player.i.stage.gte(1) ? `泡沫获取增加20倍,永久保留镶嵌层,解锁珠宝镶嵌` : ``}],
+		['display-text',function(){return player.i.stage.gte(1) ? `泡沫获取增加10倍,永久保留镶嵌层,解锁珠宝镶嵌,珠宝获取+5` : ``}],
 		"blank",
 		["row", [["clickable",11]]],
 		["row", [["clickable",12]]],
@@ -386,15 +673,16 @@ addLayer("cb", {
     row: 0,
     layerShown(){return getBuyableAmount("qu",11).gte(1) || hasChallenge("cb",11)},
 	update(diff){
+		var stage = player.i.stage.gte(1) ? "10" : "1"
 		var s24 = hasUpgrade("s",24) ? new Decimal(1.5) : new Decimal(1)
 		var s25 = hasUpgrade("s",25) ? new Decimal(0.75) : new Decimal(1)
-		var pointsgetformula = new Decimal(0).add(upgradeEffect("cb", 11)).add(upgradeEffect("cb", 12)).mul(upgradeEffect("cb", 13)).mul(upgradeEffect("cb", 21)).mul(buyableEffect("qu", 12)).mul(player.b.pointsadd).pow(s24).pow(s25)
+		var pointsgetformula = new Decimal(0).add(upgradeEffect("cb", 11)).add(upgradeEffect("cb", 12)).mul(upgradeEffect("cb", 13)).mul(upgradeEffect("cb", 21)).mul(buyableEffect("qu", 12)).mul(player.b.pointsadd).mul(stage).pow(s24).pow(s25)
 		var pointsboosterformula = new Decimal.min(Decimal.add(2).pow(player.cb.points.pow(0.05)).mul(20).add(1),Decimal.add(10000).mul(player.cb.points.pow(0.01)))
 		if(hasChallenge("cb",11)){player.cb.pointsbooster = new Decimal(pointsboosterformula)}
 		player.cb.pointsget = new Decimal(pointsgetformula).mul(player.cb.pointsbooster.add(1))
 		player.cb.pointsparticularly = new Decimal(pointsgetformula).mul(player.cb.pointsbooster.add(1)).mul(0.1)
-		if(!inChallenge("cb",11) && player.i.gamemode.eq(0)){player.cb.points = player.cb.points.add(Decimal.add(player.cb.pointsget).mul(diff))}
-		if(!inChallenge("cb",11) && player.i.gamemode.eq(0)){player.cb.points = player.cb.points.add(Decimal.add(player.cb.pointsparticularly).mul(diff))}
+		if(!inChallenge("cb",11) && !player.i.gamemode.eq(1)){player.cb.points = player.cb.points.add(Decimal.add(player.cb.pointsget).mul(diff))}
+		if(!inChallenge("cb",11) && !player.i.gamemode.eq(1)){player.cb.points = player.cb.points.add(Decimal.add(player.cb.pointsparticularly).mul(diff))}
 		if(inChallenge("cb",11) && hasUpgrade("s",13)){player.cb.points = player.cb.points.add(Decimal.add(player.cb.pointsparticularly).pow(0.25).div(player.cb.points.add(1)).pow(upgradeEffect("cb",64)).mul(diff))}
 		if(inChallenge("cb",11) && hasUpgrade("cb",71)){player.cb.points = player.cb.points.add(Decimal.add(player.cb.pointsparticularly).pow(0.25).div(player.cb.points.add(1)).pow(upgradeEffect("cb",64)).mul(0.1).mul(diff))}
 		player.cb.pointscap = new Decimal("1e15")
@@ -481,14 +769,14 @@ addLayer("cb", {
 			description(){	
 				let start = "根据宇宙泡沫略微降低碎片需求<br>"
 				let effect = upgradeEffect(this.layer, this.id).gte(1.1) && upgradeEffect(this.layer, this.id).lt(1.5) ? "(软上限)<br>" : ""
-				let effect2 = upgradeEffect(this.layer, this.id).gte(1.5) && upgradeEffect(this.layer, this.id).lt(1) ? "(双重递增软上限)<br>" : ""
+				let effect2 = upgradeEffect(this.layer, this.id).gte(1.5) && upgradeEffect(this.layer, this.id).lt(2) ? "(双重递增软上限)<br>" : ""
 				let effect3 = upgradeEffect(this.layer, this.id).gte(2) ? "(三重递增软上限)<br>" : ""
 				return start + effect + effect2 + effect3
 			},
 			cost: new Decimal(3e12),
 			effect(){
 				let eff = new Decimal(player.cb.points).pow(0.325).pow(0.325).pow(0.325).add(1)
-				eff = softcap(eff,new Decimal(1.1),0.3)
+				eff = softcap(eff,new Decimal(1.1),0.2)
 				eff = softcap(eff,new Decimal(1.5),0.1)
 				eff = softcap(eff,new Decimal(2),0.01)
 				return eff
@@ -733,7 +1021,9 @@ addLayer("b", {
 		points: new Decimal(0),
 		pointsadd: new Decimal(0),
 		energy: new Decimal(0),
+		energy2: new Decimal(0),
 		energyget: new Decimal(0),
+		energyget2: new Decimal(0),
 		booster: new Decimal(0),
 		booster2: new Decimal(0),
     }},
@@ -767,8 +1057,11 @@ addLayer("b", {
 		player.b.pointsadd = new Decimal(1).add(player.b.points).add(player.b.booster).add(player.b.booster2).pow(Decimal.add(3).add(upgradeEffect("b",13)))
 		player.b.booster = new Decimal(0).max(player.b.energy.pow(0.5).pow(0.65).sub(1),0).min(Decimal.add(30).add(player.b.energy.log(2)))
 		if(hasUpgrade("s",14)){player.b.booster2 = new Decimal(player.b.booster).div(10)}
-		player.b.energyget = new Decimal(getBuyableAmount("qu", 13)).pow(Decimal.add(1.25).add(getBuyableAmount("qu", 13).mul(0.05))).mul(upgradeEffect("b",14)).mul(upgradeEffect("b",22)).mul(upgradeEffect("s",22))
+		player.b.energyget = new Decimal(getBuyableAmount("qu", 13)).pow(Decimal.add(1.25).add(getBuyableAmount("qu", 13).mul(0.05))).add(player.b.energy2).mul(upgradeEffect("b",14)).mul(upgradeEffect("b",22)).mul(upgradeEffect("s",22))
+		player.b.energyget2 = new Decimal(buyableEffect("i",132))
 		if(hasUpgrade("b",12)){player.b.energy = player.b.energy.add(Decimal.add(player.b.energyget).mul(diff))}
+		if(!hasUpgrade("b",12)){player.b.energy = player.b.energy.add(Decimal.add(player.b.energy2).mul(diff))}
+		player.b.energy2 = player.b.energy2.add(Decimal.add(player.b.energyget2).mul(diff))
 	},
 	upgrades:{
 		11:{
@@ -861,6 +1154,8 @@ addLayer("b", {
 		['display-text',function(){return player.b.energy.gt(0) ? `<h3>你有 `+format(player.b.energy)+` 增强能量,它们给你 `+format(player.b.booster,3)+` 个格外的增强器(不可提升关于增强器的升级)(最多`+format(Decimal.add(30).add(player.b.energy.log(2)))+`个)</h3>` : ``}],
 		['display-text',function(){return hasUpgrade("s",14) ? `<h3>你所拥有的 `+format(player.b.booster,3)+` 个格外增强器给了你 `+format(player.b.booster2,3)+` 个被动增强器(不可提升关于增强器的升级)</h3>` : ``}],
 		['display-text',function(){return hasUpgrade("b",14) ? `<h3>你每秒获得 `+format(player.b.energyget)+` 增强能量</h3>` : ``}],
+		['display-text',function(){return getBuyableAmount("i",132).gte(1) ? `<h3>你每秒获得 `+format(player.b.energyget2)+` 增强核能</h3>` : ``}],
+		['display-text',function(){return getBuyableAmount("i",132).gte(1) ? `<h3>你有 `+format(player.b.energy2)+` 增强核能,每个增强核能都会生产1增强能量</h3>` : ``}],
 		['display-text',function(){return hasUpgrade("s",14) ? `<h3>你总共拥有 `+format(player.b.points.add(player.b.booster).add(player.b.booster),3)+` 个增强器</h3>` : ``}],
 		"blank",
 		"blank",
@@ -1071,7 +1366,7 @@ addLayer("s", {
 			title: "一次性升级(3 阶)",
 			description: "解锁夸克购买IV",
 			cost:function(){
-				let cost = new Decimal(10)
+				let cost = new Decimal(9)
 				if(hasUpgrade("s",21)){cost = cost.sub(1)}
 				cost = cost.sub(getBuyableAmount("qu",21))
 				return cost
@@ -1094,6 +1389,29 @@ addLayer("s", {
 				return cost
 			},
 			unlocked(){return getBuyableAmount("s",11).gte(4)},
+			onPurchase(){
+				player.s.haveupgrades = player.s.haveupgrades.add(1)
+			},
+			currencyDisplayName:"碎片能量",
+			currencyInternalName: "energyshatter",
+			currencyLayer: "s",
+		},
+		25:{
+			title: "你的速度有亿点快(8 阶)",
+			description: "每个碎片阶级都会使夸克购买项I便宜1夸克",
+			cost:function(){
+				let cost = new Decimal(39)
+				if(hasUpgrade("s",21)){cost = cost.sub(1)}
+				cost = cost.sub(getBuyableAmount("qu",21))
+				return cost
+			},
+			effect(){
+				let eff = new Decimal(0)
+				if(hasUpgrade("s",25)){eff = new Decimal(getBuyableAmount("s",11))}
+				return eff
+			},
+			effectDisplay() { return "-"+format(upgradeEffect("s",25),0)+"夸克购买I消耗" },
+			unlocked(){return getBuyableAmount("s",11).gte(7)},
 			onPurchase(){
 				player.s.haveupgrades = player.s.haveupgrades.add(1)
 			},
@@ -1128,14 +1446,15 @@ addLayer("c", {
     }},
     color: "#c3c3c3",
     requires:function (){
-		let req = new Decimal(4);
+		let req = new Decimal(8);
+		player.i.points.gte(500) ? "" : req = new Decimal(Infinity)
 		return req
 	},
     resource: "完整性",
-    baseResource: "碎片阶段", 
+    baseResource: "碎片阶段<br>重置需求:500 珠宝点数", 
     baseAmount() {return getBuyableAmount("s",11)},
     type: "normal",
-	branches: [["s","#dfdfdf"]],
+	branches: [["s","#dfdfdf"],["i","#d0ce99"]],
     exponent: 1,
     gainMult() {
         let mult = new Decimal(1)
@@ -1147,4 +1466,8 @@ addLayer("c", {
     },
     row: 3, 
     layerShown(){return getBuyableAmount("qu",11).gte(5)},
+	tabFormat: [
+		"main-display",
+		"prestige-button",
+	]
 })
