@@ -13,12 +13,19 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.14",
+	num: "0.141",
 	name: "完整夸克",
 }
 
-let changelog = `<h1>更新日志(上次更新:2021/12/12):</h1><br>
-	<h3>v0.14 完整性</h3><br>
+let changelog = `<h1>更新日志(上次更新:2021/12/14):</h1><br>
+	<h3>v0.141 完整夸克</h3><br>
+	<li>新层里程碑<br>
+	<li>关闭了离线进度,否则会出问题,出现问题会有提示并且可以在设置中解决(如没有解决请联系作者 QQ:67265011)<br>
+	<li>完整性第一排建筑及其升级<br>
+	<li>改变久东西的数值来平衡游戏<br>
+	<li>修改许多文本<br>
+	<li>现在残局是: 150总夸克<br>
+	<h3>v0.14</h3><br>
 	<li>重新开放完整性,只不过多了一些前置<br>
 	<li>完成镶嵌机制<br>
 	<li>增加增强核能,珠宝点数<br>
@@ -80,12 +87,12 @@ function addedPlayerData() { return {
 
 // Display extra things at the top of the page
 var displayThings = [
-	"当前残局: 66总夸克"
+	"当前残局: 93总夸克"
 ]
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.qu.goals[0].gte(new Decimal("66"))
+	return player.qu.goals[0].gte(new Decimal("93"))
 }
 
 

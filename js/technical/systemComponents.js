@@ -52,7 +52,7 @@ var systemComponents = {
       v-if="tmp[layer].tooltip != ''"
 			:text="(tmp[layer].isLayer) ? (
 				player[layer].unlocked ? (tmp[layer].tooltip ? tmp[layer].tooltip : formatWhole(player[layer].points) + ' ' + tmp[layer].resource)
-				: (tmp[layer].tooltipLocked ? tmp[layer].tooltipLocked : '需要 ' + formatWhole(tmp[layer].requires) + ' ' + tmp[layer].baseResource + ' 去解锁 (你有 ' + formatWhole(tmp[layer].baseAmount) + ' ' + tmp[layer].baseResource + ')')
+				: (tmp[layer].tooltipLocked ? tmp[layer].tooltipLocked : '需要 ' + formatWhole(tmp[layer].requires) + ' ' + tmp[layer].baseResource + ' 去解锁 ')
 			)
 			: (
 				tmp[layer].canClick ? (tmp[layer].tooltip ? tmp[layer].tooltip : 'I am a button!')
@@ -112,6 +112,7 @@ var systemComponents = {
 			<br>Offline Time: {{formatTime(player.offTime.remain)}}<br>
 		</span>
 		<span v-if="!options.tip" class="overlayThing">(tip:你可以在设置里关闭快捷资源显示,包括其单独项以及此提示)<br></span>
+		<span v-if="options.offlineProd" class="overlayThing"><h1>!!!你的游戏出现了问题,请在设置中修复,如果资源达到负数请在设置中修复后点击'点数清零'(如果之后还有问题请联系作者(QQ:67265011))!!!</h1><br></span>
 		<span v-if="!options.all && !options.qu && player.qu.points.gt(0) || options.always_all && !options.qu" class="overlayThing">你有 {{format(player.qu.points,0)}} / {{format(player.qu.goals[0],0)}} 夸克<br></span>
 		<span v-if="!options.all && !options.cb && player.cb.points.gt(0) || options.always_all && !options.cb"  class="overlayThing">你有 {{format(player.cb.points)}} / {{format(player.cb.pointscap)}}(软上限) 泡沫点数<br></span>
 		<span v-if="!options.all && !options.b && player.b.points.gt(0) || options.always_all && !options.b"  class="overlayThing">你有 {{format(player.b.points)}} 增强器<br></span>
@@ -163,8 +164,8 @@ var systemComponents = {
             <tr>
                 <td><button class="opt" onclick="exportSave()">导出到剪贴板</button></td>
                 <td><button class="opt" onclick="importSave()">导入</button></td>
-                <td><button class="opt" onclick="toggleOpt('offlineProd')">离线进度: {{ options.offlineProd?"开":"关" }}</button></td>
-            </tr>
+                <td><button class="opt" onclick="toggleOpt('offlineProd')" v-if="options.offlineProd">一键修正游戏: {{ options.offlineProd?"点我修正游戏,正常修正后不会显示此选项":"点我修正游戏,正常修正后不会显示此选项" }}</button></td>
+				<td><button class="optred" onclick="player.b.points = new Decimal(0);player.b.energy = new Decimal(0);player.b.booster = new Decimal(0);player.s.points = new Decimal(0);player.i.points = new Decimal(0);player.qu.goals[0] = new Decimal(0);player.qu.goals[1] = new Decimal(0);player.qu.goals[2] = new Decimal(0);player.qu.goals[3] = new Decimal(0);player.qu.goals[4] = new Decimal(0);player.qu.tip = new Decimal(0);player.qu.points = new Decimal(0);player.cb.points = new Decimal(0);" v-if="!options.offlineProd"><h6>点数清零(若游戏没有问题请不要点)<br>点击前请先重置夸克和碎片购买,之后多点几次.联系作者:QQ67265011</h6></button></td>
             <tr>
                 <td><button class="opt" onclick="switchTheme()">主题: {{ getThemeName() }}</button></td>
                 <td><button class="opt" onclick="adjustMSDisp()">显示里程碑: {{ MS_DISPLAYS[MS_SETTINGS.indexOf(options.msDisplay)]}}</button></td>

@@ -117,10 +117,25 @@ a {
 	cursor: pointer;
 }
 
+.optred {
+	height: 100px;
+	width: 150px;
+	border-radius: 25%;
+	border: 4px solid;
+	background-color: red;
+	border-color: rgba(0, 0, 0, 0.125);
+	color: rgba(0, 0, 0, 0.5);
+	cursor: pointer;
+}
+
 .opt:hover {
 	background-color: #439ea3;
 }
 
 .optsub:hover {
-	background-color: #439ea3;
+	background-color: #eddfa1;
+}
+
+.optred:hover {
+	background-color: #f09494;
 }

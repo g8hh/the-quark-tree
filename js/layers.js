@@ -14,7 +14,7 @@ addLayer("qu", {
     startData() { return {
         unlocked: true,
 		points: new Decimal(0),
-        goals: [new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0)],
+        goals: [new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0)],
 		pointsbest: new Decimal(0),
 		tip: new Decimal(0),
     }},
@@ -38,9 +38,12 @@ addLayer("qu", {
 			if(!hasChallenge("cb",11)){player.cb.points = new Decimal(0)}
 			player.b.points = new Decimal(0)
 			player.b.energy = new Decimal(0)
+			player.b.energy2 = new Decimal(0)
 			player.b.booster = new Decimal(0)
 			player.s.points = new Decimal(0)
 			player.s.haveupgrades = new Decimal(0)
+			player.s.upgrades = []
+			player.s.energyshatter = new Decimal(player.s.shatter)
 			player.c.points = new Decimal(0)
 		},
 		respecText: "重置夸克购买",
@@ -63,7 +66,31 @@ addLayer("qu", {
 				return new Decimal(x).add(1)
 			},
 			title:"夸克购买II 泡沫",
-			display() { return "提升宇宙泡沫获取<br><br>"+"需要:"+format(this.cost(),0)+"夸克<br>目前数量:"+format(getBuyableAmount(this.layer, this.id),0)+"个<br>目前效果:<br>+"+format(buyableEffect(this.layer, this.id),0)+"倍获取"},
+			display() {
+				let start = "提升宇宙泡沫获取<br><br>"+"需要:"+format(this.cost(),0)+"夸克<br>目前数量:"+format(getBuyableAmount(this.layer, this.id),0)+"个<br>"
+				let effect = "目前效果:<br>+"+format(buyableEffect(this.layer, this.id),0)+"倍获取<br>"
+				let effcap1 = buyableEffect(this.layer, this.id).gte(1e6) && buyableEffect(this.layer, this.id).lt(1e7) ? "一级软上限<br>(超过1e6效果^0.95)<br>" : ""
+				let effcap2 = buyableEffect(this.layer, this.id).gte(1e7) && buyableEffect(this.layer, this.id).lt(1e8) ? "二级软上限<br>(超过1e6效果^0.9)<br>" : ""
+				let effcap3 = buyableEffect(this.layer, this.id).gte(1e8) && buyableEffect(this.layer, this.id).lt(1e9) ? "三级软上限<br>(超过1e6效果^0.85)<br>" : ""
+				let effcap4 = buyableEffect(this.layer, this.id).gte(1e9) && buyableEffect(this.layer, this.id).lt(1e10) ? "四级软上限<br>(超过1e6效果^0.8)<br>" : ""
+				let effcap5 = buyableEffect(this.layer, this.id).gte(1e10) && buyableEffect(this.layer, this.id).lt(1e11) ? "五级软上限<br>(超过1e6效果^0.75)<br>" : ""
+				let effcap6 = buyableEffect(this.layer, this.id).gte(1e11) && buyableEffect(this.layer, this.id).lt(1e12) ? "六级软上限<br>(超过1e6效果^0.7)<br>" : ""
+				let effcap7 = buyableEffect(this.layer, this.id).gte(1e12) && buyableEffect(this.layer, this.id).lt(1e13) ? "七级软上限<br>(超过1e6效果^0.65)<br>" : ""
+				let effcap8 = buyableEffect(this.layer, this.id).gte(1e13) && buyableEffect(this.layer, this.id).lt(1e14) ? "八级软上限<br>(超过1e6效果^0.6)<br>" : ""
+				let effcap9 = buyableEffect(this.layer, this.id).gte(1e14) && buyableEffect(this.layer, this.id).lt(1e15) ? "九级软上限<br>(超过1e6效果^0.55)<br>" : ""
+				let effcap10 = buyableEffect(this.layer, this.id).gte(1e15) && buyableEffect(this.layer, this.id).lt(1e16) ? "十级软上限<br>(超过1e6效果^0.5)<br>" : ""
+				let effcap11 = buyableEffect(this.layer, this.id).gte(1e16) && buyableEffect(this.layer, this.id).lt(1e17) ? "十一级软上限<br>(超过1e6效果^0.45)<br>" : ""
+				let effcap12 = buyableEffect(this.layer, this.id).gte(1e17) && buyableEffect(this.layer, this.id).lt(1e18) ? "十二级软上限<br>(超过1e6效果^0.4)<br>" : ""
+				let effcap13 = buyableEffect(this.layer, this.id).gte(1e18) && buyableEffect(this.layer, this.id).lt(1e19) ? "十三级软上限<br>(超过1e6效果^0.375)<br>" : ""
+				let effcap14 = buyableEffect(this.layer, this.id).gte(1e19) && buyableEffect(this.layer, this.id).lt(1e20) ? "十四级软上限<br>(超过1e6效果^0.35)<br>" : ""
+				let effcap15 = buyableEffect(this.layer, this.id).gte(1e20) && buyableEffect(this.layer, this.id).lt(1e21) ? "十五级软上限<br>(超过1e6效果^0.325)<br>" : ""
+				let effcap16 = buyableEffect(this.layer, this.id).gte(1e21) && buyableEffect(this.layer, this.id).lt(1e22) ? "十六级软上限<br>(超过1e6效果^0.3)<br>" : ""
+				let effcap17 = buyableEffect(this.layer, this.id).gte(1e22) && buyableEffect(this.layer, this.id).lt(1e23) ? "十七级软上限<br>(超过1e6效果^0.275)<br>" : ""
+				let effcap18 = buyableEffect(this.layer, this.id).gte(1e23) && buyableEffect(this.layer, this.id).lt(1e24) ? "十八级软上限<br>(超过1e6效果^0.25)<br>" : ""
+				let effcap19 = buyableEffect(this.layer, this.id).gte(1e24) && buyableEffect(this.layer, this.id).lt(1e25) ? "十九级软上限<br>(超过1e6效果^0.225)<br>" : ""
+				let effcap20 = buyableEffect(this.layer, this.id).gte(1e25) && buyableEffect(this.layer, this.id).lt(1e26) ? "二十级软上限<br>(超过1e6效果^0.2)<br>" : ""
+				return start + effect + effcap1 + effcap2 + effcap3 + effcap4 + effcap5 + effcap6 + effcap7 + effcap8 + effcap9 + effcap10 + effcap11 + effcap12 + effcap13 + effcap14 + effcap15 + effcap16 + effcap17 + effcap18 + effcap19 + effcap20
+			},
 			canAfford() { return player[this.layer].points.gte(this.cost()) },
 			buy() {
 				player[this.layer].points = player[this.layer].points.sub(this.cost())
@@ -75,6 +102,26 @@ addLayer("qu", {
 				if(hasUpgrade("cb",61)){eff = eff.pow(1.5)}
 				if(hasUpgrade("cb",25)){eff = eff.pow(1.5)}
 				eff = eff.pow(buyableEffect("i",122))
+				if(eff.gt(1e6) && eff.lt(1e7)){eff = softcap(eff,new Decimal(1e6),0.95)}
+				if(eff.gt(1e7) && eff.lt(1e8)){eff = softcap(eff,new Decimal(1e6),0.9)}
+				if(eff.gt(1e8) && eff.lt(1e9)){eff = softcap(eff,new Decimal(1e6),0.85)}
+				if(eff.gt(1e9) && eff.lt(1e10)){eff = softcap(eff,new Decimal(1e6),0.80)}
+				if(eff.gt(1e10) && eff.lt(1e11)){eff = softcap(eff,new Decimal(1e6),0.75)}
+				if(eff.gt(1e11) && eff.lt(1e12)){eff = softcap(eff,new Decimal(1e6),0.7)}
+				if(eff.gt(1e12) && eff.lt(1e13)){eff = softcap(eff,new Decimal(1e6),0.65)}
+				if(eff.gt(1e13) && eff.lt(1e14)){eff = softcap(eff,new Decimal(1e6),0.6)}
+				if(eff.gt(1e14) && eff.lt(1e15)){eff = softcap(eff,new Decimal(1e6),0.55)}
+				if(eff.gt(1e15) && eff.lt(1e16)){eff = softcap(eff,new Decimal(1e6),0.5)}
+				if(eff.gt(1e16) && eff.lt(1e17)){eff = softcap(eff,new Decimal(1e6),0.45)}
+				if(eff.gt(1e17) && eff.lt(1e18)){eff = softcap(eff,new Decimal(1e6),0.4)}
+				if(eff.gt(1e18) && eff.lt(1e19)){eff = softcap(eff,new Decimal(1e6),0.375)}
+				if(eff.gt(1e19) && eff.lt(1e20)){eff = softcap(eff,new Decimal(1e6),0.35)}
+				if(eff.gt(1e20) && eff.lt(1e21)){eff = softcap(eff,new Decimal(1e6),0.325)}
+				if(eff.gt(1e21) && eff.lt(1e22)){eff = softcap(eff,new Decimal(1e6),0.3)}
+				if(eff.gt(1e22) && eff.lt(1e23)){eff = softcap(eff,new Decimal(1e6),0.275)}
+				if(eff.gt(1e23) && eff.lt(1e24)){eff = softcap(eff,new Decimal(1e6),0.25)}
+				if(eff.gt(1e24) && eff.lt(1e25)){eff = softcap(eff,new Decimal(1e6),0.225)}
+				if(eff.gt(1e25) && eff.lt(1e26)){eff = softcap(eff,new Decimal(1e6),0.2)}
 				return eff
 			},
 			unlocked(){return hasUpgrade("cb",14) || getBuyableAmount(this.layer, this.id).gte(1)},
@@ -132,6 +179,7 @@ addLayer("qu", {
 			goal(){
 				let goal = Decimal.add(10).mul(player.qu.goals[1]).pow(Decimal.add(2).mul(player.qu.goals[1]).mul(0.595))
 				if(hasUpgrade("cb",15)){goal = goal.pow(0.5)}
+				if(hasUpgrade("s",31)){goal = goal.pow(0.99)}
 				return goal
 			},
 			progress(){
@@ -162,6 +210,7 @@ addLayer("qu", {
 			unlocked(){return getBuyableAmount("qu",11).gte(2) && !inChallenge("cb",11)},
 			goal(){
 				let goal = Decimal.add(1).mul(player.qu.goals[2].add(1).mul(4)).pow(Decimal.add(1).add(player.qu.goals[2].mul(0.1)))
+				if(hasUpgrade("s",31)){goal = goal.pow(0.99)}
 				return goal
 			},
 			progress(){
@@ -184,21 +233,22 @@ addLayer("qu", {
 			}
 		},
 		bigBar2: {
-			display() {return "距离获得三个夸克 "+format(player.s.haveupgrades,0)+" / "+format(this.goal(),0)+" 碎片升级(已获得"+format(player.qu.goals[3],0)+"个)"},	
+			display() {return "距离获得下一个夸克 "+format(player.s.haveupgrades,0)+" / "+format(this.goal(),0)+" 碎片升级(已获得"+format(player.qu.goals[3],0)+"个)"},	
 			direction: RIGHT,
 			width: 500,
 			height: 50,
 			progress() { return {} },
 			unlocked(){return getBuyableAmount("qu",11).gte(3) && !inChallenge("cb",11)},
 			goal(){
-				let goal = Decimal.add(2).pow(player.qu.goals[3].div(3))
+				let goal = Decimal.add(1).add(player.qu.goals[3])
+				if(hasUpgrade("s",31)){goal = goal.pow(0.99)}
 				return goal
 			},
 			progress(){
 				if(player.s.haveupgrades.gte(this.goal()) && !inChallenge("cb",11)){
-					player.qu.goals[3] = player.qu.goals[3].add(3)
-					player.qu.goals[0] = player.qu.goals[0].add(3)
-					player.qu.points = player.qu.points.add(3)
+					player.qu.goals[3] = player.qu.goals[3].add(1)
+					player.qu.goals[0] = player.qu.goals[0].add(1)
+					player.qu.points = player.qu.points.add(1)
 				}else{
 					return (player.s.haveupgrades.div(this.goal())).toNumber()
 				}
@@ -222,6 +272,7 @@ addLayer("qu", {
 			unlocked(){return hasUpgrade("b",15) && getBuyableAmount("qu",11).gte(2) && !inChallenge("cb",11)},
 			goal(){
 				let goal = Decimal.add(12).mul(player.qu.goals[4].add(1).pow(0.5))
+				if(hasUpgrade("s",31)){goal = goal.pow(0.99)}
 				return goal
 			},
 			progress(){
@@ -243,6 +294,37 @@ addLayer("qu", {
 				"color": "#000000"
 			}
 		},
+		bigBar4: {
+			display() {return "距离获得下一个夸克 "+format(player.c.allcabin)+" / "+format(this.goal())+" 建筑(已获得"+format(player.qu.goals[5],0)+"个)"},	
+			direction: RIGHT,
+			width: 500,
+			height: 50,
+			progress() { return {} },
+			unlocked(){return getBuyableAmount("qu",11).gte(5) && !inChallenge("cb",11)},
+			goal(){
+				let goal = new Decimal(player.qu.goals[5]).add(1).mul(Decimal.add(1.15).add(player.qu.goals[5].div(200)))
+				if(hasUpgrade("s",31)){goal = goal.pow(0.99)}
+				return goal
+			},
+			progress(){
+				if(player.c.allcabin.gte(this.goal()) && !inChallenge("cb",11)){
+					player.qu.goals[5] = player.qu.goals[5].add(1)
+					player.qu.goals[0] = player.qu.goals[0].add(1)
+					player.qu.points = player.qu.points.add(1)
+				}else{
+					return (player.c.allcabin.div(this.goal())).toNumber()
+				}
+			},
+			baseStyle: {
+				"background-color": "#FFFFFF"
+			},
+			fillStyle: {
+				"background-color": "#c3c3c3"
+			},
+			textStyle: {
+				"color": "#000000"
+			}
+		},
 	},
 	tabFormat: [
 		"blank",
@@ -252,6 +334,9 @@ addLayer("qu", {
 		['display-text',function(){return hasUpgrade("cb",14) || getBuyableAmount("qu",12).gte(1) ? `<h6>tip3:当你拥有一个类型的夸克购买项之后它将持续解锁(如:你有一个夸克购买II,即使你没有'夸克魔力'升级夸克购买II也会持续解锁)<br><h6>` : ``}],
 		['display-text',function(){return hasChallenge("cb",12) ? `<h6>tip4:在挑战中无法获得获得夸克的进度<br><h6>` : ``}],
 		['display-text',function(){return getBuyableAmount("i",142).gte(1) ? `<h6>tip5:夸克购买项消耗无法成为负数<br><h6>` : ``}],
+		['display-text',function(){return getBuyableAmount("qu",21).gte(1) ? `<h6>tip6:夸克重置时重置碎片升级<br><h6>` : ``}],
+		['display-text',function(){return player.i.stage.gte(1) ? `<h6>tip7:非加成类小数点后三位的概率省略(e.g. 宝石镶嵌几率0.0009%相当于0%)<br><h6>` : ``}],
+		['display-text',function(){return player.c.working.gte(1) ? `<h6>tip8:只有完整性开启后工人才会工作<br><h6>` : ``}],
 		"blank",
 		"blank",
 		"blank",
@@ -260,6 +345,7 @@ addLayer("qu", {
 		["row", [["bar", "bigBar1"]]],
 		["row", [["bar", "bigBar3"]]],
 		["row", [["bar", "bigBar2"]]],
+		["row", [["bar", "bigBar4"]]],
 		"blank",
 		"blank",
 		"blank",
@@ -286,7 +372,6 @@ addLayer("i", {
 		stage: new Decimal(0),
 		goals: [new Decimal(0),new Decimal(0),new Decimal(0),new Decimal(0)],
     }},
-	
     color: "#ffffff",    
 	nodeStyle: {
         background: "linear-gradient(#c3c3c3 10%, #F0F0F0 30%, #fff200 50%, #8cfffb 70%, #0ed145 90%)",
@@ -315,6 +400,7 @@ addLayer("i", {
 			layerDataReset("c")
 			layerDataReset("qu")
 		}
+		if(player.i.points.lt(0)){player.i.points = new Decimal(0)}
 	},
 	buyables:{
 		112:{
@@ -342,7 +428,7 @@ addLayer("i", {
 				}
 			},
 			effect(x){
-				let eff = new Decimal(x).pow(2).add(1)
+				let eff = new Decimal(Decimal.add(x).mul(1.75)).pow(2).add(1)
 				return eff
 			},
 			style() {
@@ -455,7 +541,7 @@ addLayer("i", {
 			onClick(){
 				if(!player.i.gamemode.eq(0)){
 					player.i.gamemode = new Decimal(0)
-					player.i.timebest = new Decimal(player.i.time)
+					if(player.i.timebest.lt(player.i.time)){player.i.timebest = new Decimal(player.i.time)}
 				}else{
 					player.i.gamemode = new Decimal(1)
 				}
@@ -472,7 +558,7 @@ addLayer("i", {
 			title: "完成镶嵌",
 			display() {return "泡沫获取增加20倍,永久保留镶嵌层,解锁珠宝镶嵌,珠宝获取+5"},
 			canClick(){return true},
-			unlocked(){return !player.i.stage.gte(1) || player.i.timebest.gte(60)},
+			unlocked(){return !player.i.stage.gte(1) && player.i.timebest.gte(60)},
 			onClick(){
 				player.i.timelast = new Decimal(0)
 				player.i.stage = new Decimal(1)
@@ -495,7 +581,7 @@ addLayer("i", {
 					layerDataReset("c")
 					layerDataReset("qu")
 					player.i.gamemode = new Decimal(2)
-					player.i.timelast = new Decimal(player.i.timebest)
+					player.i.timelast = new Decimal(player.i.timebest).mul(1.1)
 					player.i.points = new Decimal(0)
 				}
 				return
@@ -610,7 +696,7 @@ addLayer("i", {
         },
 		lore2: {
             title: "开凿挑战",
-            body() { return "开启后重置除了镶嵌的所有和珠宝点数.在规定时间(为珠宝挑战的最大时长)达到目标即可开凿" },
+            body() { return "开启后重置除了镶嵌的所有和珠宝点数.在规定时间(为 珠宝挑战的最大时长*1.1)达到目标即可开凿" },
 			unlocked(){return player.i.stage.gte(1)}
         },
 		lore3: {
@@ -630,20 +716,26 @@ addLayer("i", {
 		["row", [["clickable",141],["buyable",142]]],
 		['infobox','lore2'],
 		['display-text',function(){return player.i.stage.gte(1) ? `宝石挑战:<br>开凿完肯定需要镶嵌对吧<br>开启后重置除了镶嵌的所有和珠宝点数,并开始倒计时,此时可开凿珠宝,一旦倒计时结束将再次进行一次重置并退出珠宝挑战` : ``}],
-		['display-text',function(){return player.i.stage.gte(1) ? `白宝石:25 珠宝<br>蓝宝石:5e10 宇宙泡沫<br>绿宝石:175 增强能量<br>红宝石:3 夸克购买项I` : ``}],
+		['display-text',function(){return player.i.stage.gte(1) && !player.i.goals[0].gte(1) ? `白宝石:25 珠宝` : ``}],
+		['display-text',function(){return player.i.stage.gte(1) && !player.i.goals[1].gte(1) ? `蓝宝石:5e10 宇宙泡沫` : ``}],
+		['display-text',function(){return player.i.stage.gte(1) && !player.i.goals[2].gte(1) ? `绿宝石:175 增强能量` : ``}],
+		['display-text',function(){return player.i.stage.gte(1) && !player.i.goals[3].gte(1) ? `红宝石:3 夸克购买项I` : ``}],
 		"blank",
 		['display-text',function(){return player.i.stage.gte(1) ? `剩余 `+format(player.i.timelast)+ ` 秒` : ``}],
 		["row", [["clickable",13]]],
 		["row", [["clickable",21],["clickable",22],["clickable",23],["clickable",24]]],
 		['infobox','lore'],
 		['display-text',function(){return `镶嵌挑战:<br>把你的物质镶嵌到夸克上<br>开启后每秒减少 (当前宇宙泡沫^0.69)*(开启时间^2)*100 宇宙泡沫且禁用宇宙泡沫获得`}],
-		['display-text',function(){return `开启最大秒数达到 60 时可以完成下一阶段镶嵌,这将重置你除了镶嵌外的全部物品,但是获得镶嵌加成`}],
-		['display-text',function(){return player.i.stage.gte(1) ? `开启最大秒数达到 1.79e308 时可以完成下一阶段镶嵌,这将重置你除了镶嵌外的全部物品,但是获得镶嵌加成` : ``}],
+		['display-text',function(){return `开启最大秒数达到目标时可以完成下一阶段镶嵌,这将重置你除了镶嵌外的全部物品,但是获得镶嵌加成`}],
+		['display-text',function(){return `60秒:泡沫获取增加10倍,永久保留镶嵌层,解锁珠宝镶嵌,珠宝获取+5`}],
+		['display-text',function(){return player.i.stage.gte(1) ? `1.79e308秒:完整性消耗底数优先-2,珠宝获取+50,解锁新的珠宝以及珠宝阶级2` : ``}],
 		"blank",
 		['display-text',function(){return `已开启 `+format(player.i.time)+ ` 秒`}],
 		['display-text',function(){return player.i.timebest.gt(0) ? `最大 `+format(player.i.timebest)+ ` 秒` : ``}],
 		"blank",
+		['display-text',function(){return player.i.stage.gte(1) ? `拥有效果:` : ``}],
 		['display-text',function(){return player.i.stage.gte(1) ? `泡沫获取增加10倍,永久保留镶嵌层,解锁珠宝镶嵌,珠宝获取+5` : ``}],
+		['display-text',function(){return player.i.stage.gte(2) ? `完整性消耗底数优先-2,珠宝获取+50,解锁新的珠宝以及珠宝阶级2` : ``}],
 		"blank",
 		["row", [["clickable",11]]],
 		["row", [["clickable",12]]],
@@ -672,7 +764,7 @@ addLayer("cb", {
 		var stage = player.i.stage.gte(1) ? "10" : "1"
 		var s24 = hasUpgrade("s",24) ? new Decimal(1.5) : new Decimal(1)
 		var s25 = hasUpgrade("s",25) ? new Decimal(0.75) : new Decimal(1)
-		var pointsgetformula = new Decimal(0).add(upgradeEffect("cb", 11)).add(upgradeEffect("cb", 12)).mul(upgradeEffect("cb", 13)).mul(upgradeEffect("cb", 21)).mul(buyableEffect("qu", 12)).mul(player.b.pointsadd).mul(stage).pow(s24).pow(s25)
+		var pointsgetformula = new Decimal(0).add(upgradeEffect("cb", 11)).add(upgradeEffect("cb", 12)).mul(upgradeEffect("cb", 13)).mul(upgradeEffect("cb", 21)).mul(buyableEffect("qu", 12)).mul(player.b.pointsadd).mul(Decimal.add(2).pow(player.c.laboratory)).mul(stage).pow(s24).pow(s25)
 		var pointsboosterformula = new Decimal.min(Decimal.add(2).pow(player.cb.points.pow(0.05)).mul(20).add(1),Decimal.add(10000).mul(player.cb.points.pow(0.01)))
 		if(hasChallenge("cb",11)){player.cb.pointsbooster = new Decimal(pointsboosterformula)}
 		player.cb.pointsget = new Decimal(pointsgetformula).mul(player.cb.pointsbooster.add(1))
@@ -713,7 +805,7 @@ addLayer("cb", {
 				return eff
 			},
 			effectDisplay() { return "+"+format(upgradeEffect(this.layer, this.id))+"宇宙泡沫获取" },
-			unlocked(){return hasUpgrade("cb",11) || inChallenge("cb",11)},
+			unlocked(){return hasUpgrade("cb",11) || inChallenge("cb",11) || hasMilestone("m",1)},
 		},
 		13:{
 			title: "泡沫膨胀",
@@ -725,19 +817,19 @@ addLayer("cb", {
 				if(hasUpgrade("cb",62)){eff = new Decimal(3000)}
 				return eff
 			},
-			unlocked(){return hasUpgrade("cb",12) || inChallenge("cb",11)},
+			unlocked(){return hasUpgrade("cb",12) || inChallenge("cb",11) || hasMilestone("m",2)},
 		},
 		14:{
 			title: "夸克魔力",
 			description: "或许是因为没有比那些更合适的升级了<br>解锁夸克购买II<br>",
 			cost: new Decimal(100),
-			unlocked(){return hasUpgrade("cb",13) || inChallenge("cb",11)},
+			unlocked(){return hasUpgrade("cb",13) || inChallenge("cb",11) || hasMilestone("m",4)},
 		},
 		15:{
 			title: "更多夸克",
 			description: "又或者是人们早已习惯用和看到这些升级<br>宇宙泡沫夸克获取进度公式增加 ^0.5<br>(原公式) -> (原公式)^0.5",
 			cost: new Decimal(2000),
-			unlocked(){return hasUpgrade("cb",14) || inChallenge("cb",11)},
+			unlocked(){return hasUpgrade("cb",14) || inChallenge("cb",11) || hasMilestone("m",4)},
 		},
 		21:{
 			title: "夸克加成",
@@ -784,7 +876,7 @@ addLayer("cb", {
 			title: "又是什么令人难受的东西?",
 			description: "这总是让人难受<br>解锁挑战",
 			cost: new Decimal(1e13),
-			unlocked(){return hasUpgrade("s",11)},
+			unlocked(){return hasUpgrade("s",11) || hasMilestone("m",4)},
 		},
 		24:{
 			title: "加倍后的减价",
@@ -799,8 +891,8 @@ addLayer("cb", {
 			effect(){
 				let eff = new Decimal(player.cb.points).add(1).log(10).pow(0.005).pow(0.005).pow(0.005).add(1)
 				eff = softcap(eff,new Decimal(1.05),0.1)
-				eff = softcap(eff,new Decimal(1.1),0.01)
-				eff = softcap(eff,new Decimal(1.3),0.001)
+				eff = softcap(eff,new Decimal(1.1),0.02)
+				eff = softcap(eff,new Decimal(1.3),0.003)
 				return eff
 			},
 			effectDisplay() { return "/"+format(upgradeEffect(this.layer, this.id),5)+"增强器需求指数" },
@@ -810,7 +902,7 @@ addLayer("cb", {
 			title: "有些熟悉?",
 			description: "你好像看过这个升级?又没完全看过?<br>夸克购买II效果^1.5",
 			cost: new Decimal(1e22),
-			unlocked(){return hasChallenge("cb",11) && player.cb.points.gte(1e22) || hasUpgrade("cb",25)},
+			unlocked(){return hasChallenge("cb",11) && player.cb.points.gte(1e22) || hasUpgrade("cb",25) || hasMilestone("m",4)},
 		},
 		61:{
 			title: "*夸克助推器",
@@ -1149,10 +1241,10 @@ addLayer("b", {
 		}],
 		['display-text',function(){return player.b.energy.gt(0) ? `<h3>你有 `+format(player.b.energy)+` 增强能量,它们给你 `+format(player.b.booster,3)+` 个格外的增强器(不可提升关于增强器的升级)(最多`+format(Decimal.add(30).add(player.b.energy.log(2)))+`个)</h3>` : ``}],
 		['display-text',function(){return hasUpgrade("s",14) ? `<h3>你所拥有的 `+format(player.b.booster,3)+` 个格外增强器给了你 `+format(player.b.booster2,3)+` 个被动增强器(不可提升关于增强器的升级)</h3>` : ``}],
+		['display-text',function(){return hasUpgrade("s",14) ? `<h3>你总共拥有 `+format(player.b.points.add(player.b.booster).add(player.b.booster),3)+` 个增强器</h3>` : ``}],
+		['display-text',function(){return getBuyableAmount("i",132).gte(1) ? `<h3>你有 `+format(player.b.energy2)+` 增强核能,每个增强核能都会生产1增强能量</h3>` : ``}],
 		['display-text',function(){return hasUpgrade("b",14) ? `<h3>你每秒获得 `+format(player.b.energyget)+` 增强能量</h3>` : ``}],
 		['display-text',function(){return getBuyableAmount("i",132).gte(1) ? `<h3>你每秒获得 `+format(player.b.energyget2)+` 增强核能</h3>` : ``}],
-		['display-text',function(){return getBuyableAmount("i",132).gte(1) ? `<h3>你有 `+format(player.b.energy2)+` 增强核能,每个增强核能都会生产1增强能量</h3>` : ``}],
-		['display-text',function(){return hasUpgrade("s",14) ? `<h3>你总共拥有 `+format(player.b.points.add(player.b.booster).add(player.b.booster),3)+` 个增强器</h3>` : ``}],
 		"blank",
 		"blank",
 		"blank",
@@ -1200,9 +1292,15 @@ addLayer("s", {
     gainExp() {
         return new Decimal(1)
     },
+		doReset(resettingLayer) {
+			let keep = [];
+			if (resettingLayer=="c" && hasMilestone("m",3)) keep.push("points");
+			if (layers[resettingLayer].row > this.row) layerDataReset("s", keep);
+		},
     row: 1,
     layerShown(){return getBuyableAmount("qu",11).gte(3)},
 	update(diff){
+		if(player.s.points.lt(0)){player.s.points = new Decimal(0)}
 	},
 	buyables: {
 		showRespec: true,
@@ -1349,7 +1447,7 @@ addLayer("s", {
 				if(hasUpgrade("s",22)){eff = new Decimal(player.s.points).add(1)}
 				return eff
 			},
-			effectDisplay() { return "*"+format(player.s.points.add(1),0)+"能量获取" },
+			effectDisplay() { return "*"+format(player.s.points.add(1),2)+"能量获取" },
 			unlocked(){return getBuyableAmount("s",11).gte(3)},
 			onPurchase(){
 				player.s.haveupgrades = player.s.haveupgrades.add(1)
@@ -1393,10 +1491,10 @@ addLayer("s", {
 			currencyLayer: "s",
 		},
 		25:{
-			title: "你的速度有亿点快(8 阶)",
+			title: "你的速度有亿点快(7 阶)",
 			description: "每个碎片阶级都会使夸克购买项I便宜1夸克",
 			cost:function(){
-				let cost = new Decimal(39)
+				let cost = new Decimal(26)
 				if(hasUpgrade("s",21)){cost = cost.sub(1)}
 				cost = cost.sub(getBuyableAmount("qu",21))
 				return cost
@@ -1408,6 +1506,23 @@ addLayer("s", {
 			},
 			effectDisplay() { return "-"+format(upgradeEffect("s",25),0)+"夸克购买I消耗" },
 			unlocked(){return getBuyableAmount("s",11).gte(7)},
+			onPurchase(){
+				player.s.haveupgrades = player.s.haveupgrades.add(1)
+			},
+			currencyDisplayName:"碎片能量",
+			currencyInternalName: "energyshatter",
+			currencyLayer: "s",
+		},
+		31:{
+			title: "你的速度有ee点快(7 阶)",
+			description: "所有夸克获取在公式末尾^0.99",
+			cost:function(){
+				let cost = new Decimal(88)
+				if(hasUpgrade("s",21)){cost = cost.sub(1)}
+				cost = cost.sub(getBuyableAmount("qu",21))
+				return cost
+			},
+			unlocked(){return getBuyableAmount("s",11).gte(12)},
 			onPurchase(){
 				player.s.haveupgrades = player.s.haveupgrades.add(1)
 			},
@@ -1433,12 +1548,26 @@ addLayer("s", {
 })
 
 addLayer("c", {
-    name: "Completeness",
+    name: "completeness",
     symbol: "C",
     position: 0,
     startData() { return {
         unlocked: false,
 		points: new Decimal(0),
+		gamemode: new Decimal(0),
+		gamemode2: new Decimal(0),
+		allcabin: new Decimal(0),
+		schedule: new Decimal(0),
+		schedulemax: new Decimal(300),
+		working: new Decimal(0),
+		work: new Decimal(0),
+		worker_cabin: new Decimal(1),
+		milestones_cabin: new Decimal(0),
+		jewelry_shop: new Decimal(0),
+		jewelry_shopeff: new Decimal(0),
+		crushing_machine: new Decimal(0),
+		crushing_machineeff: new Decimal(0),
+		laboratory: new Decimal(0),
     }},
     color: "#c3c3c3",
     requires:function (){
@@ -1450,7 +1579,7 @@ addLayer("c", {
     baseResource: "碎片阶段<br>重置需求:500 珠宝点数", 
     baseAmount() {return getBuyableAmount("s",11)},
     type: "normal",
-	branches: [["s","#dfdfdf"],["i","#d0ce99"]],
+	branches: [["s","#dfdfdf"],["i","#dfdfdf"],["m","#c968a4"]],
     exponent: 1,
     gainMult() {
         let mult = new Decimal(1)
@@ -1460,10 +1589,380 @@ addLayer("c", {
 		let exp = new Decimal(1)
         return exp
     },
-    row: 3, 
+	update(diff){
+		player.c.schedulemax = new Decimal(300)
+		player.c.work = new Decimal(player.c.worker_cabin)
+		player.c.jewelry_shopeff = new Decimal(Decimal.add(0.975).pow(player.c.jewelry_shop))
+		player.c.crushing_machineeff = new Decimal(Decimal.add(0.925).pow(player.c.crushing_machine))
+		if(player.c.working.gt(player.c.worker_cabin)){player.c.working = new Decimal(player.c.worker_cabin)}
+		if(player.s.points.gt(player.c.working.mul(Decimal.add(20).mul(player.c.crushing_machineeff))) && player.i.points.gt(player.c.working.mul(Decimal.add(500).mul(player.c.jewelry_shopeff))) && player.c.gamemode.eq(0) && getBuyableAmount("qu",11).gte(5)){
+			player.s.points = player.s.points.sub(player.c.working.mul(0.2).mul(diff))
+			player.i.points = player.i.points.sub(player.c.working.mul(Decimal.add(5).mul(Decimal.add(0.95).pow(player.c.jewelry_shop))).mul(diff))
+			player.c.schedule = player.c.schedule.add(player.c.working.mul(diff))
+		}
+		player.c.allcabin = new Decimal(player.c.worker_cabin).add(player.c.milestones_cabin).add(player.c.jewelry_shop)
+	},
+    row: 2, 
     layerShown(){return getBuyableAmount("qu",11).gte(5)},
+	upgrades:{
+		11:{
+			title: "学习I",
+			description: "同名升级会使此升级贵2倍(第一个升级免费)<br>碎片进度-20<br>解锁新的随机建筑<br>里程碑小屋",
+			cost:function(){
+				let cost = new Decimal(1)
+				if(!hasUpgrade("c",11) && !hasUpgrade("c",12) && !hasUpgrade("c",13) && !hasUpgrade("c",14) && !hasUpgrade("c",15)){cost = cost.sub(1)}
+				if(hasUpgrade("c",11)){cost = cost.mul(2)}
+				if(hasUpgrade("c",12)){cost = cost.mul(2)}
+				if(hasUpgrade("c",13)){cost = cost.mul(2)}
+				if(hasUpgrade("c",14)){cost = cost.mul(2)}
+				if(hasUpgrade("c",15)){cost = cost.mul(2)}
+				return cost
+			},
+			unlocked(){return true},
+			currencyDisplayName:"工人",
+			currencyInternalName: "working",
+			currencyLayer: "c",
+		},
+		12:{
+			title: "学习I",
+			description: "同名升级会使此升级贵2倍(第一个升级免费)<br>碎片进度-20<br>解锁新的随机建筑<br>珠宝店",
+			cost:function(){
+				let cost = new Decimal(1)
+				if(!hasUpgrade("c",11) && !hasUpgrade("c",12) && !hasUpgrade("c",13) && !hasUpgrade("c",14) && !hasUpgrade("c",15)){cost = cost.sub(1)}
+				if(hasUpgrade("c",11)){cost = cost.mul(2)}
+				if(hasUpgrade("c",12)){cost = cost.mul(2)}
+				if(hasUpgrade("c",13)){cost = cost.mul(2)}
+				if(hasUpgrade("c",14)){cost = cost.mul(2)}
+				if(hasUpgrade("c",15)){cost = cost.mul(2)}
+				return cost
+			},
+			unlocked(){return true},
+			currencyDisplayName:"工人",
+			currencyInternalName: "working",
+			currencyLayer: "c",
+		},
+		13:{
+			title: "学习I",
+			description: "同名升级会使此升级贵2倍(第一个升级免费)<br>碎片进度-20<br>解锁新的随机建筑<br>粉碎厂",
+			cost:function(){
+				let cost = new Decimal(1)
+				if(!hasUpgrade("c",11) && !hasUpgrade("c",12) && !hasUpgrade("c",13) && !hasUpgrade("c",14) && !hasUpgrade("c",15)){cost = cost.sub(1)}
+				if(hasUpgrade("c",11)){cost = cost.mul(2)}
+				if(hasUpgrade("c",12)){cost = cost.mul(2)}
+				if(hasUpgrade("c",13)){cost = cost.mul(2)}
+				if(hasUpgrade("c",14)){cost = cost.mul(2)}
+				if(hasUpgrade("c",15)){cost = cost.mul(2)}
+				return cost
+			},
+			unlocked(){return true},
+			currencyDisplayName:"工人",
+			currencyInternalName: "working",
+			currencyLayer: "c",
+		},
+		14:{
+			title: "学习I",
+			description: "同名升级会使此升级贵2倍(第一个升级免费)<br>碎片进度-20<br>解锁新的随机建筑<br>研究室",
+			cost:function(){
+				let cost = new Decimal(1)
+				if(!hasUpgrade("c",11) && !hasUpgrade("c",12) && !hasUpgrade("c",13) && !hasUpgrade("c",14) && !hasUpgrade("c",15)){cost = cost.sub(1)}
+				if(hasUpgrade("c",11)){cost = cost.mul(2)}
+				if(hasUpgrade("c",12)){cost = cost.mul(2)}
+				if(hasUpgrade("c",13)){cost = cost.mul(2)}
+				if(hasUpgrade("c",14)){cost = cost.mul(2)}
+				if(hasUpgrade("c",15)){cost = cost.mul(2)}
+				return cost
+			},
+			unlocked(){return true},
+			currencyDisplayName:"工人",
+			currencyInternalName: "working",
+			currencyLayer: "c",
+		},
+		15:{
+			title: "学习I",
+			description: "同名升级会使此升级贵2倍(第一个升级免费)<br>碎片进度-20<br>解锁新的随机建筑<br>发电厂",
+			cost:function(){
+				let cost = new Decimal(1)
+				if(!hasUpgrade("c",11) && !hasUpgrade("c",12) && !hasUpgrade("c",13) && !hasUpgrade("c",14) && !hasUpgrade("c",15)){cost = cost.sub(1)}
+				if(hasUpgrade("c",11)){cost = cost.mul(2)}
+				if(hasUpgrade("c",12)){cost = cost.mul(2)}
+				if(hasUpgrade("c",13)){cost = cost.mul(2)}
+				if(hasUpgrade("c",14)){cost = cost.mul(2)}
+				if(hasUpgrade("c",15)){cost = cost.mul(2)}
+				return cost
+			},
+			unlocked(){return true},
+			currencyDisplayName:"工人",
+			currencyInternalName: "working",
+			currencyLayer: "c",
+		},
+		61:{
+			title: "谁说只有夸克能解锁层?",
+			description: "解锁里程碑层",
+			cost:function(){
+				let cost = new Decimal(0)
+				return cost
+			},
+			unlocked(){return player.c.milestones_cabin.gte(1) || hasUpgrade("c",61)},
+			currencyDisplayName:"里程碑小屋",
+			currencyInternalName: "milestones_cabin",
+			currencyLayer: "c",
+		},
+		62:{
+			title: "禁止扩充",
+			description: "解锁新功能不再扩充,开启后不会再获得任何工人小屋",
+			cost:function(){
+				let cost = new Decimal(4)
+				return cost
+			},
+			unlocked(){return player.c.worker_cabin.gte(5) || hasUpgrade("c",62)},
+			currencyDisplayName:"工人小屋",
+			currencyInternalName: "worker_cabin",
+			currencyLayer: "c",
+		},
+		63:{
+			title: "这个几率太低了",
+			description: "里程碑小屋抽取概率+5%",
+			cost:function(){
+				let cost = new Decimal(5)
+				return cost
+			},
+			effect(){
+				let eff = new Decimal(0)
+				if(hasUpgrade("c",63)){eff = new Decimal(5000)}
+				return eff
+			},
+			unlocked(){return player.c.milestones_cabin.gte(5) && hasUpgrade("c",61) || hasUpgrade("c",63)},
+			currencyDisplayName:"里程碑小屋",
+			currencyInternalName: "milestones_cabin",
+			currencyLayer: "c",
+		},
+	},
+	clickables:{
+		11:{
+			title: "招聘",
+			display() {return player.c.worker_cabin.lte(player.c.working) ? "无空闲工人小屋" : "需要1完整性"},
+			canClick(){return player.c.points.gte(1) && !player.c.working.gte(player.c.work)},
+			unlocked(){return true},
+			onClick(){
+				player.c.points = player.c.points.sub(1)
+				player.c.working = player.c.working.add(1)
+				return
+			},
+		},
+		12:{
+			title: "解雇",
+			display() {return "不返还完整性"},
+			canClick(){return player.c.working.gte(1)},
+			unlocked(){return true},
+			onClick(){
+				player.c.working = player.c.working.sub(1)
+				return
+			},
+		},
+		13:{
+			title: "罢工",
+			display() {return player.c.gamemode.eq(1) ? "已停工" : "还在工作"},
+			canClick(){return player.c.working.gte(1)},
+			unlocked(){return true},
+			onClick(){
+				if(!player.c.gamemode.eq(0)){
+					player.c.gamemode = new Decimal(0)
+				}else{
+					player.c.gamemode = new Decimal(1)
+				}
+				return
+			},
+		},
+		14:{
+			title: "不再扩充",
+			display() {return player.c.gamemode2.eq(1) ? "停止扩充" : "扩充中"},
+			canClick(){return player.c.working.gte(1)},
+			unlocked(){return hasUpgrade("c",62)},
+			onClick(){
+				if(!player.c.gamemode2.eq(0)){
+					player.c.gamemode2 = new Decimal(0)
+				}else{
+					player.c.gamemode2 = new Decimal(1)
+				}
+				return
+			},
+		},
+	},
+	bars:{
+		bigBar0:{
+			display() {return "碎片进度 "+format(player.c.schedule)+" / "+format(this.goal())},	
+			direction: RIGHT,
+			width: 500,
+			height: 50,
+			progress() { return {} },
+			unlocked(){return true},
+			goal(){
+				let goal = player.c.schedulemax
+				if(hasUpgrade("c",11)){goal = goal.sub(20)}
+				if(hasUpgrade("c",12)){goal = goal.sub(20)}
+				if(hasUpgrade("c",13)){goal = goal.sub(20)}
+				if(hasUpgrade("c",14)){goal = goal.sub(20)}
+				if(hasUpgrade("c",15)){goal = goal.sub(20)}
+				return goal
+			},
+			progress(){
+				if(player.c.schedule.gte(this.goal())){
+					for(col=1;col<=1;col++){
+						let building = Math.floor(Math.random() * 6)
+						switch(building){
+							case 0:
+							if(player.c.gamemode2.eq(0)){
+								player.c.schedule = player.c.schedule.sub(this.goal())
+								player.c.worker_cabin = player.c.worker_cabin.add(1)
+							}else{
+								col--
+							}
+							break
+							case 1:
+							let getbuilding = Math.floor(Math.random() * 100000)
+							let row = new Decimal(100000).div(Decimal.add(2).pow(player.c.milestones_cabin)).add(upgradeEffect("c",63))
+							if(hasUpgrade("c",11) && getbuilding < row){
+								player.c.schedule = player.c.schedule.sub(this.goal())
+								player.c.milestones_cabin = player.c.milestones_cabin.add(1)
+							}else{
+								col--
+							}
+							break
+							case 2:
+							if(hasUpgrade("c",12)){
+								player.c.schedule = player.c.schedule.sub(this.goal())
+								player.c.jewelry_shop = player.c.jewelry_shop.add(1)
+							}else{
+								col--
+							}
+							break
+							case 3:
+							if(hasUpgrade("c",13)){
+								player.c.schedule = player.c.schedule.sub(this.goal())
+								player.c.crushing_machine = player.c.crushing_machine.add(1)
+							}else{
+								col--
+							}
+							break
+							case 4:
+							if(hasUpgrade("c",14)){
+								player.c.schedule = player.c.schedule.sub(this.goal())
+								player.c.laboratory = player.c.laboratory.add(1)
+							}else{
+								col--
+							}
+							break
+							case 5:
+							if(hasUpgrade("c",15)){
+								
+							}else{
+								col--
+							}
+							break
+						}
+					}
+				}else{
+					return (player.c.schedule.div(this.goal())).toNumber()
+				}
+			},
+			baseStyle: {
+				"background-color": "#c3c3c3"
+			},
+			fillStyle: {
+				"background-color": "#f2f2f2"
+			},
+			textStyle: {
+				"color": "#000000"
+			}
+		},
+	},
 	tabFormat: [
 		"main-display",
 		"prestige-button",
+		"blank",
+		"clickables",
+		"blank",
+		['display-text',function(){return player.c.worker_cabin.gte(1) ? `<h5>你有 `+format(player.c.worker_cabin,0)+` 工人小屋,它们总共能住 `+format(player.c.work,0)+` 工人</h5>` : ``}],
+		['display-text',function(){return player.c.milestones_cabin.gte(1) ?  `<h5>你有 `+format(player.c.milestones_cabin,0)+` 里程碑小屋,每个里程碑小屋都会使里程碑小屋获取几率减半,现在几率是`+format(new Decimal(100).div(Decimal.add(2).pow(player.c.milestones_cabin)).add(upgradeEffect("c",63).div(1000)),3)+`%</h6>` : ""}],
+		['display-text',function(){return player.c.jewelry_shop.gte(1) ?  `<h5>你有 `+format(player.c.jewelry_shop,0)+` 珠宝店,它们减少你 `+format(Decimal.add(100).sub(player.c.jewelry_shopeff.mul(100)),3)+`% 的珠宝消耗</h6>` : ""}],
+		['display-text',function(){return player.c.crushing_machine.gte(1) ?  `<h5>你有 `+format(player.c.crushing_machine,0)+` 粉碎机,它们减少你 `+format(Decimal.add(100).sub(player.c.crushing_machineeff.mul(100)),3)+`% 的碎片消耗</h6>` : ""}],
+		['display-text',function(){return player.c.laboratory.gte(1) ?  `<h5>你有 `+format(player.c.laboratory,0)+` 实验室,它们减少你 `+format(Decimal(2).pow(player.c.laboratory),2)+` 宇宙泡沫生产</h6>` : ""}],
+		"blank",
+		['display-text',function(){return `<h5>你有 `+format(player.c.working,0)+` 工人正在工作,他们每秒消耗 `+format(player.c.working.mul(Decimal.add(0.2).mul(player.c.jewelry_shopeff)))+` 碎片和 `+format(player.c.working.mul(Decimal.add(5).mul(player.c.crushing_machineeff)))+` 珠宝点数,增加 `+format(player.c.working,0)+` 碎片进度</h5>`}],
+		['display-text',function(){return `<h6>(tip:需要至少100秒的需求数量才可以生产)</h6>`}],
+		["row", [["bar", "bigBar0"]]],
+		"blank",
+		"blank",
+		"upgrades",
+	]
+})
+
+addLayer("m", {
+    name: "milestones",
+    symbol: "M",
+    position: 2,
+    startData() { return {
+        unlocked: true,
+		points: new Decimal(0),
+    }},
+    color: "#b83dba",
+	tooltip() { 
+		return`里程碑` 
+	},
+    type: "none",
+	update(diff){
+		if(player.cb.points.gte(0) && hasMilestone("m",0) && !hasUpgrade("cb",11)){player.cb.upgrades.push(11)}
+		if(player.cb.points.gte(10) && hasMilestone("m",1) && !hasUpgrade("cb",12)){player.cb.upgrades.push(12)}
+		if(player.cb.points.gte(30) && hasMilestone("m",2) && !hasUpgrade("cb",13)){player.cb.upgrades.push(13)}
+		if(player.cb.points.gte(100) && hasMilestone("m",4) && !hasUpgrade("cb",14)){player.cb.upgrades.push(14)}
+		if(player.cb.points.gte(2000) && hasMilestone("m",4) && !hasUpgrade("cb",15)){player.cb.upgrades.push(15)}
+		if(player.cb.points.gte(1e13) && hasMilestone("m",4) && !hasUpgrade("cb",23)){player.cb.upgrades.push(23)}
+		if(player.cb.points.gte(1e22) && hasMilestone("m",4) && !hasUpgrade("cb",25)){player.cb.upgrades.push(25)}
+	},
+    row: 1, 
+    layerShown(){return hasUpgrade("c",61)},
+	milestones: {
+		0: {
+			requirementDescription: "(1) 1 里程碑小屋",
+			effectDescription: "自动购买宇宙泡沫第一个升级(不消耗宇宙泡沫),并且持续解锁此升级",
+			done() {
+				return player.c.milestones_cabin.gte(1) && hasUpgrade("c",61)
+			},
+		},
+		1: {
+			requirementDescription: "(2) 2 里程碑小屋",
+			effectDescription: "自动购买宇宙泡沫第二个升级(不消耗宇宙泡沫),并且持续解锁此升级",
+			done() {
+				return player.c.milestones_cabin.gte(2) && hasUpgrade("c",61)
+			},
+			unlocked(){return hasMilestone("m",0)}
+		},
+		2: {
+			requirementDescription: "(3) 3 里程碑小屋",
+			effectDescription: "自动购买宇宙泡沫第三个升级(不消耗宇宙泡沫),并且持续解锁此升级",
+			done() {
+				return player.c.milestones_cabin.gte(3) && hasUpgrade("c",61)
+			},
+			unlocked(){return hasMilestone("m",1)}
+		},
+		3: {
+			requirementDescription: "(4) 5 里程碑小屋",
+			effectDescription: "重置完整性时不重置碎片点数",
+			done() {
+				return player.c.milestones_cabin.gte(5) && hasUpgrade("c",61)
+			},
+			unlocked(){return hasMilestone("m",2)}
+		},
+		4: {
+			requirementDescription: "(5) 6 里程碑小屋",
+			effectDescription: "自动购买宇宙泡沫第四个升级,第五个升级,第八个升级,第十个升级(不消耗宇宙泡沫),并且持续解锁此升级",
+			done() {
+				return player.c.milestones_cabin.gte(6) && hasUpgrade("c",61)
+			},
+			unlocked(){return hasMilestone("m",3)}
+		},
+	},
+	tabFormat: [
+		"milestones",
 	]
 })
