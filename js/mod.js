@@ -20,6 +20,7 @@ let VERSION = {
 let changelog = `<h1>更新日志(上次更新:2021/12/14):</h1><br>
 	<h3>v0.141 完整夸克</h3><br>
 	<li>新层里程碑<br>
+	<li>美化游戏<br>
 	<li>关闭了离线进度,否则会出问题,出现问题会有提示并且可以在设置中解决(如没有解决请联系作者 QQ:67265011)<br>
 	<li>完整性第一排建筑及其升级<br>
 	<li>改变久东西的数值来平衡游戏<br>
@@ -87,12 +88,12 @@ function addedPlayerData() { return {
 
 // Display extra things at the top of the page
 var displayThings = [
-	"当前残局: 93总夸克"
+	"当前残局: 133总夸克"
 ]
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.qu.goals[0].gte(new Decimal("93"))
+	return player.qu.goals[0].gte(new Decimal("133"))
 }
 
 

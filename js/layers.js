@@ -210,7 +210,7 @@ addLayer("qu", {
 			unlocked(){return getBuyableAmount("qu",11).gte(2) && !inChallenge("cb",11)},
 			goal(){
 				let goal = Decimal.add(1).mul(player.qu.goals[2].add(1).mul(4)).pow(Decimal.add(1).add(player.qu.goals[2].mul(0.1)))
-				if(hasUpgrade("s",31)){goal = goal.pow(0.99)}
+				if(hasUpgrade("s",31)){goal = goal.pow(0.95)}
 				return goal
 			},
 			progress(){
@@ -241,7 +241,7 @@ addLayer("qu", {
 			unlocked(){return getBuyableAmount("qu",11).gte(3) && !inChallenge("cb",11)},
 			goal(){
 				let goal = Decimal.add(1).add(player.qu.goals[3])
-				if(hasUpgrade("s",31)){goal = goal.pow(0.99)}
+				if(hasUpgrade("s",31)){goal = goal.pow(0.95)}
 				return goal
 			},
 			progress(){
@@ -272,7 +272,7 @@ addLayer("qu", {
 			unlocked(){return hasUpgrade("b",15) && getBuyableAmount("qu",11).gte(2) && !inChallenge("cb",11)},
 			goal(){
 				let goal = Decimal.add(12).mul(player.qu.goals[4].add(1).pow(0.5))
-				if(hasUpgrade("s",31)){goal = goal.pow(0.99)}
+				if(hasUpgrade("s",31)){goal = goal.pow(0.95)}
 				return goal
 			},
 			progress(){
@@ -303,7 +303,7 @@ addLayer("qu", {
 			unlocked(){return getBuyableAmount("qu",11).gte(5) && !inChallenge("cb",11)},
 			goal(){
 				let goal = new Decimal(player.qu.goals[5]).add(1).mul(Decimal.add(1.15).add(player.qu.goals[5].div(200)))
-				if(hasUpgrade("s",31)){goal = goal.pow(0.99)}
+				if(hasUpgrade("s",31)){goal = goal.pow(0.95)}
 				return goal
 			},
 			progress(){
@@ -708,7 +708,7 @@ addLayer("i", {
 	tabFormat: [
 		['infobox','lore3'],
 		"blank",
-		['display-text',function(){return player.i.stage.gte(1) ? `你有 `+format(player.i.points)+` 珠宝点数<br>你每秒获得 `+format(player.i.pointsget)+` 珠宝点数` : ``}],
+		['display-text',function(){return player.i.stage.gte(1) ? `你有 <points id="pointsi">`+format(player.i.points)+`</points id="pointsi"> 珠宝点数<br>你每秒获得 <points id="pointsi">`+format(player.i.pointsget)+`</points id="pointsi"> 珠宝点数` : ``}],
 		"blank",
 		["row", [["clickable",111],["buyable",112]]],
 		["row", [["clickable",121],["buyable",122]]],
@@ -1081,9 +1081,9 @@ addLayer("cb", {
 	tabFormat: [
 		"main-display",
 		"blank",
-		['display-text',function(){return hasUpgrade("s",13) && !inChallenge("cb",11) ? `<h3>你每秒总共获得 `+format(player.cb.pointsparticularly.add(player.cb.pointsget))+` 宇宙泡沫</h3>` : ``}],
-		['display-text',function(){return !inChallenge("cb",11) ? `<h3>你每秒获得 `+format(player.cb.pointsget)+` 宇宙泡沫</h3>` : `<h3>你可以获得 `+format(player.cb.pointsget.pow(0.25).div(player.cb.points.add(1)).pow(upgradeEffect("cb",64)))+` 宇宙泡沫</h3>`}],
-		['display-text',function(){return hasUpgrade("s",13) && !inChallenge("cb",11) ? `<h3>你每秒格外获得 `+format(player.cb.pointsparticularly)+` 宇宙泡沫</h3>` : ``}],
+		['display-text',function(){return hasUpgrade("s",13) && !inChallenge("cb",11) ? `<h3>你每秒总共获得 <h3 id="pointscb">`+format(player.cb.pointsparticularly.add(player.cb.pointsget))+`</h3 id="pointscb"> 宇宙泡沫</h3>` : ``}],
+		['display-text',function(){return !inChallenge("cb",11) ? `<h3>你每秒获得 <h3 id="pointscb">`+format(player.cb.pointsget)+`</h3 id="pointscb"> 宇宙泡沫</h3>` : `<h3>你可以获得 <h3 id="pointscb">`+format(player.cb.pointsget.pow(0.25).div(player.cb.points.add(1)).pow(upgradeEffect("cb",64)))+`</h3 id="pointscb"> 宇宙泡沫</h3>`}],
+		['display-text',function(){return hasUpgrade("s",13) && !inChallenge("cb",11) ? `<h3>你每秒格外获得 <h3 id="pointscb">`+format(player.cb.pointsparticularly)+`</h3 id="pointscb"> 宇宙泡沫</h3>` : ``}],
 		['display-text',function(){return hasChallenge("cb",11) ? `<h3>你的泡沫获取增强 `+format(player.cb.pointsbooster)+` 倍</h3>` : ``}],
 		"blank",
 		['display-text',function(){return hasUpgrade("cb",65) && inChallenge("cb",11) ? `<h3>你可以获得 `+format(Decimal.max(player.cb.points.pow(upgradeEffect("cb",72)).pow(upgradeEffect("cb",72)).sub(1).mul(buyableEffect("qu",13))),5)+` 增强器</h3>` : ``}],
@@ -1145,7 +1145,7 @@ addLayer("b", {
 		player.b.pointsadd = new Decimal(1).add(player.b.points).add(player.b.booster).add(player.b.booster2).pow(Decimal.add(3).add(upgradeEffect("b",13)))
 		player.b.booster = new Decimal(0).max(player.b.energy.pow(0.5).pow(0.65).sub(1),0).min(Decimal.add(30).add(player.b.energy.log(2)))
 		if(hasUpgrade("s",14)){player.b.booster2 = new Decimal(player.b.booster).div(10)}
-		player.b.energyget = new Decimal(getBuyableAmount("qu", 13)).pow(Decimal.add(1.25).add(getBuyableAmount("qu", 13).mul(0.05))).add(player.b.energy2).mul(upgradeEffect("b",14)).mul(upgradeEffect("b",22)).mul(upgradeEffect("s",22))
+		player.b.energyget = new Decimal(getBuyableAmount("qu", 13)).pow(Decimal.add(1.25).add(getBuyableAmount("qu", 13).mul(0.05))).add(player.b.energy2).mul(upgradeEffect("b",14)).mul(upgradeEffect("b",22)).mul(upgradeEffect("s",22).mul(player.c.power_planteff))
 		player.b.energyget2 = new Decimal(buyableEffect("i",132))
 		if(hasUpgrade("b",12)){player.b.energy = player.b.energy.add(Decimal.add(player.b.energyget).mul(diff))}
 		if(!hasUpgrade("b",12)){player.b.energy = player.b.energy.add(Decimal.add(player.b.energy2).mul(diff))}
@@ -1239,12 +1239,12 @@ addLayer("b", {
 			let effect2 = hasUpgrade("b",14) ? `,为你的增强能量获取提供 `+format(player.b.pointsadd.mul(0.0000085),5)+` 的获取加成</h3>` : ""
 			return effect + effect2
 		}],
-		['display-text',function(){return player.b.energy.gt(0) ? `<h3>你有 `+format(player.b.energy)+` 增强能量,它们给你 `+format(player.b.booster,3)+` 个格外的增强器(不可提升关于增强器的升级)(最多`+format(Decimal.add(30).add(player.b.energy.log(2)))+`个)</h3>` : ``}],
-		['display-text',function(){return hasUpgrade("s",14) ? `<h3>你所拥有的 `+format(player.b.booster,3)+` 个格外增强器给了你 `+format(player.b.booster2,3)+` 个被动增强器(不可提升关于增强器的升级)</h3>` : ``}],
-		['display-text',function(){return hasUpgrade("s",14) ? `<h3>你总共拥有 `+format(player.b.points.add(player.b.booster).add(player.b.booster),3)+` 个增强器</h3>` : ``}],
-		['display-text',function(){return getBuyableAmount("i",132).gte(1) ? `<h3>你有 `+format(player.b.energy2)+` 增强核能,每个增强核能都会生产1增强能量</h3>` : ``}],
-		['display-text',function(){return hasUpgrade("b",14) ? `<h3>你每秒获得 `+format(player.b.energyget)+` 增强能量</h3>` : ``}],
-		['display-text',function(){return getBuyableAmount("i",132).gte(1) ? `<h3>你每秒获得 `+format(player.b.energyget2)+` 增强核能</h3>` : ``}],
+		['display-text',function(){return player.b.energy.gt(0) ? `<h3>你有 <h3 id="pointsb">`+format(player.b.energy)+`</h3> 增强能量,它们给你 <h3 id="pointsb">`+format(player.b.booster,3)+`</h3> 个格外的增强器(不可提升关于增强器的升级)(最多`+format(Decimal.add(30).add(player.b.energy.log(2)))+`个)</h3>` : ``}],
+		['display-text',function(){return hasUpgrade("s",14) ? `<h3>你所拥有的 <h3 id="pointsb">`+format(player.b.booster,3)+`</h3> 个格外增强器给了你 <h3 id="pointsb">`+format(player.b.booster2,3)+`</h3> 个被动增强器(不可提升关于增强器的升级)</h3>` : ``}],
+		['display-text',function(){return hasUpgrade("s",14) ? `<h3>你总共拥有 <h3 id="pointsb">`+format(player.b.points.add(player.b.booster).add(player.b.booster),3)+`</h3> 个增强器</h3>` : ``}],
+		['display-text',function(){return getBuyableAmount("i",132).gte(1) ? `<h3>你有 <h3 id="pointsb">`+format(player.b.energy2)+`</h3> 增强核能,每个增强核能都会生产1增强能量</h3>` : ``}],
+		['display-text',function(){return hasUpgrade("b",14) ? `<h3>你每秒获得 <h3 id="pointsb">`+format(player.b.energyget)+`</h3> 增强能量</h3>` : ``}],
+		['display-text',function(){return getBuyableAmount("i",132).gte(1) ? `<h3>你每秒获得 <h3 id="pointsb">`+format(player.b.energyget2)+`</h3> 增强核能</h3>` : ``}],
 		"blank",
 		"blank",
 		"blank",
@@ -1514,8 +1514,8 @@ addLayer("s", {
 			currencyLayer: "s",
 		},
 		31:{
-			title: "你的速度有ee点快(7 阶)",
-			description: "所有夸克获取在公式末尾^0.99",
+			title: "你的速度有ee点快(12 阶)",
+			description: "所有夸克获取在公式末尾^0.88",
 			cost:function(){
 				let cost = new Decimal(88)
 				if(hasUpgrade("s",21)){cost = cost.sub(1)}
@@ -1535,9 +1535,9 @@ addLayer("s", {
 		"main-display",
 		"prestige-button",
 		"blank",
-		['display-text',function(){return `<h3>你有 `+format(player.s.energyshatter,0)+` / `+format(player.s.shatter,0)+` 碎片能量</h3>`}],
+		['display-text',function(){return `<h3>你有 <h3 id="pointss">`+format(player.s.energyshatter,0)+`</h3 id="pointss"> <h3>/</h3> <h3 id="pointss">`+format(player.s.shatter,0)+`</h3> 碎片能量</h3>`}],
 		"blank",
-		['display-text',function(){return `<h3>你有 `+format(player.s.haveupgrades,0)+` 碎片升级</h3>`}],
+		['display-text',function(){return `<h3>你有 <h3 id="pointss">`+format(player.s.haveupgrades,0)+`</h3> 碎片升级</h3>`}],
 		"blank",
 		"buyables",
 		"blank",
@@ -1568,6 +1568,9 @@ addLayer("c", {
 		crushing_machine: new Decimal(0),
 		crushing_machineeff: new Decimal(0),
 		laboratory: new Decimal(0),
+		laboratoryeff: new Decimal(0),
+		power_plant: new Decimal(0),
+		power_planteff: new Decimal(0),
     }},
     color: "#c3c3c3",
     requires:function (){
@@ -1591,9 +1594,11 @@ addLayer("c", {
     },
 	update(diff){
 		player.c.schedulemax = new Decimal(300)
-		player.c.work = new Decimal(player.c.worker_cabin)
+		player.c.work = new Decimal(player.c.worker_cabin).add(1)
 		player.c.jewelry_shopeff = new Decimal(Decimal.add(0.975).pow(player.c.jewelry_shop))
 		player.c.crushing_machineeff = new Decimal(Decimal.add(0.925).pow(player.c.crushing_machine))
+		player.c.laboratoryeff = new Decimal(Decimal.add(1.15).pow(player.c.laboratory))
+		player.c.power_planteff = new Decimal(player.c.power_plant)
 		if(player.c.working.gt(player.c.worker_cabin)){player.c.working = new Decimal(player.c.worker_cabin)}
 		if(player.s.points.gt(player.c.working.mul(Decimal.add(20).mul(player.c.crushing_machineeff))) && player.i.points.gt(player.c.working.mul(Decimal.add(500).mul(player.c.jewelry_shopeff))) && player.c.gamemode.eq(0) && getBuyableAmount("qu",11).gte(5)){
 			player.s.points = player.s.points.sub(player.c.working.mul(0.2).mul(diff))
@@ -1854,7 +1859,8 @@ addLayer("c", {
 							break
 							case 5:
 							if(hasUpgrade("c",15)){
-								
+								player.c.schedule = player.c.schedule.sub(this.goal())
+								player.c.power_plant = player.c.power_plant.add(1)
 							}else{
 								col--
 							}
@@ -1886,7 +1892,8 @@ addLayer("c", {
 		['display-text',function(){return player.c.milestones_cabin.gte(1) ?  `<h5>你有 `+format(player.c.milestones_cabin,0)+` 里程碑小屋,每个里程碑小屋都会使里程碑小屋获取几率减半,现在几率是`+format(new Decimal(100).div(Decimal.add(2).pow(player.c.milestones_cabin)).add(upgradeEffect("c",63).div(1000)),3)+`%</h6>` : ""}],
 		['display-text',function(){return player.c.jewelry_shop.gte(1) ?  `<h5>你有 `+format(player.c.jewelry_shop,0)+` 珠宝店,它们减少你 `+format(Decimal.add(100).sub(player.c.jewelry_shopeff.mul(100)),3)+`% 的珠宝消耗</h6>` : ""}],
 		['display-text',function(){return player.c.crushing_machine.gte(1) ?  `<h5>你有 `+format(player.c.crushing_machine,0)+` 粉碎机,它们减少你 `+format(Decimal.add(100).sub(player.c.crushing_machineeff.mul(100)),3)+`% 的碎片消耗</h6>` : ""}],
-		['display-text',function(){return player.c.laboratory.gte(1) ?  `<h5>你有 `+format(player.c.laboratory,0)+` 实验室,它们减少你 `+format(Decimal(2).pow(player.c.laboratory),2)+` 宇宙泡沫生产</h6>` : ""}],
+		['display-text',function(){return player.c.laboratory.gte(1) ?  `<h5>你有 `+format(player.c.laboratory,0)+` 实验室,它们增加你 `+format(player.c.laboratoryeff,2)+` 宇宙泡沫生产</h6>` : ""}],
+		['display-text',function(){return player.c.laboratory.gte(1) ?  `<h5>你有 `+format(player.c.laboratory,0)+` 发电厂,它们增加你 `+format(player.c.power_planteff,2)+` 增强能量生产</h6>` : ""}],
 		"blank",
 		['display-text',function(){return `<h5>你有 `+format(player.c.working,0)+` 工人正在工作,他们每秒消耗 `+format(player.c.working.mul(Decimal.add(0.2).mul(player.c.jewelry_shopeff)))+` 碎片和 `+format(player.c.working.mul(Decimal.add(5).mul(player.c.crushing_machineeff)))+` 珠宝点数,增加 `+format(player.c.working,0)+` 碎片进度</h5>`}],
 		['display-text',function(){return `<h6>(tip:需要至少100秒的需求数量才可以生产)</h6>`}],
@@ -1918,6 +1925,11 @@ addLayer("m", {
 		if(player.cb.points.gte(2000) && hasMilestone("m",4) && !hasUpgrade("cb",15)){player.cb.upgrades.push(15)}
 		if(player.cb.points.gte(1e13) && hasMilestone("m",4) && !hasUpgrade("cb",23)){player.cb.upgrades.push(23)}
 		if(player.cb.points.gte(1e22) && hasMilestone("m",4) && !hasUpgrade("cb",25)){player.cb.upgrades.push(25)}
+	},
+	doReset(resettingLayer) {
+		let keep = [];
+		keep.push("milestones");
+		if (layers[resettingLayer].row > this.row) layerDataReset("cb", keep);
 	},
     row: 1, 
     layerShown(){return hasUpgrade("c",61)},

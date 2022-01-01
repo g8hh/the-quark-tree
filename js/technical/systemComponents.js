@@ -114,13 +114,13 @@ var systemComponents = {
 		<span v-if="!options.tip" class="overlayThing">(tip:你可以在设置里关闭快捷资源显示,包括其单独项以及此提示)<br></span>
 		<span v-if="options.offlineProd" class="overlayThing"><h1>!!!你的游戏出现了问题,请在设置中修复,如果资源达到负数请在设置中修复后点击'点数清零'(如果之后还有问题请联系作者(QQ:67265011))!!!</h1><br></span>
 		<span v-if="!options.all && !options.qu && player.qu.points.gt(0) || options.always_all && !options.qu" class="overlayThing">你有 {{format(player.qu.points,0)}} / {{format(player.qu.goals[0],0)}} 夸克<br></span>
-		<span v-if="!options.all && !options.cb && player.cb.points.gt(0) || options.always_all && !options.cb"  class="overlayThing">你有 {{format(player.cb.points)}} / {{format(player.cb.pointscap)}}(软上限) 泡沫点数<br></span>
-		<span v-if="!options.all && !options.b && player.b.points.gt(0) || options.always_all && !options.b"  class="overlayThing">你有 {{format(player.b.points)}} 增强器<br></span>
-		<span v-if="!options.all && !options.b_energy && player.b.energy.gt(0) || options.always_all && !options.b_energy"  class="overlayThing">你有 {{format(player.b.energy)}} 增强能量<br></span>
-		<span v-if="!options.all && !options.b_energy2 && player.b.energy2.gt(0) || options.always_all && !options.b_energy2"  class="overlayThing">你有 {{format(player.b.energy2)}} 增强核能<br></span>
-		<span v-if="!options.all && !options.s && player.s.points.gt(0) || options.always_all && !options.s"  class="overlayThing">你有 {{format(player.s.points)}} & {{format(getBuyableAmount("s",11),0)}} / 碎片 & 碎片阶级<br></span>
+		<span v-if="!options.all && !options.cb && player.cb.points.gt(0) || options.always_all && !options.cb"  class="overlayThing">你有 <points id="pointscb">{{format(player.cb.points)}}</points> / <points id="pointscb">{{format(player.cb.pointscap)}}</points>(软上限) 泡沫点数<br></span>
+		<span v-if="!options.all && !options.b && player.b.points.gt(0) || options.always_all && !options.b"  class="overlayThing">你有 <points id="pointsb">{{format(player.b.points)}}</points> 增强器<br></span>
+		<span v-if="!options.all && !options.b_energy && player.b.energy.gt(0) || options.always_all && !options.b_energy"  class="overlayThing">你有 <points id="pointsb">{{format(player.b.energy)}}</points> 增强能量<br></span>
+		<span v-if="!options.all && !options.b_energy2 && player.b.energy2.gt(0) || options.always_all && !options.b_energy2"  class="overlayThing">你有 <points id="pointsb">{{format(player.b.energy2)}}</points> 增强核能<br></span>
+		<span v-if="!options.all && !options.s && player.s.points.gt(0) || options.always_all && !options.s"  class="overlayThing">你有 <points id="pointss">{{format(player.s.points)}}</points> & <points id="pointss">{{format(getBuyableAmount("s",11),0)}}</points> / 碎片 & 碎片阶级<br></span>
 		<span v-if="!options.all && !options.i_landy && player.i.stage.gte(1) && player.i.gamemode.eq(2) || options.always_all && !options.i_landy"  class="overlayThing">你还有 {{format(player.i.timelast)}} 时间进行珠宝挑战<br></span>
-		<span v-if="!options.all && !options.i && player.i.points.gt(0) || options.always_all && !options.i"  class="overlayThing">你有 {{format(player.i.points)}} 珠宝点数<br></span>
+		<span v-if="!options.all && !options.i && player.i.points.gt(0) || options.always_all && !options.i"  class="overlayThing">你有 <points id="pointsi">{{format(player.i.points)}}</points> 珠宝点数<br></span>
 		<span v-if="canGenPoints()"  class="overlayThing">({{tmp.other.oompsMag != 0 ? format(tmp.other.oomps) + " OOM" + (tmp.other.oompsMag < 0 ? "^OOM" : tmp.other.oompsMag > 1 ? "^" + tmp.other.oompsMag : "") + "s" : formatSmall(getPointGen())}}/sec)</span>
 		<div v-for="thing in tmp.displayThings" class="overlayThing"><span v-if="thing" v-html="thing"></span></div>
 	</div>
