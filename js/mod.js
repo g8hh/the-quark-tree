@@ -13,7 +13,7 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.141",
+	num: "0.1411",
 	name: "完整夸克",
 }
 
