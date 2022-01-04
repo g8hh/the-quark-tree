@@ -1594,11 +1594,11 @@ addLayer("c", {
     },
 	update(diff){
 		player.c.schedulemax = new Decimal(300)
-		player.c.work = new Decimal(player.c.worker_cabin).add(1)
+		player.c.work = new Decimal(player.c.worker_cabin)
 		player.c.jewelry_shopeff = new Decimal(Decimal.add(0.975).pow(player.c.jewelry_shop))
 		player.c.crushing_machineeff = new Decimal(Decimal.add(0.925).pow(player.c.crushing_machine))
 		player.c.laboratoryeff = new Decimal(Decimal.add(1.15).pow(player.c.laboratory))
-		player.c.power_planteff = new Decimal(player.c.power_plant)
+		player.c.power_planteff = new Decimal(player.c.power_plant).add(1)
 		if(player.c.working.gt(player.c.worker_cabin)){player.c.working = new Decimal(player.c.worker_cabin)}
 		if(player.s.points.gt(player.c.working.mul(Decimal.add(20).mul(player.c.crushing_machineeff))) && player.i.points.gt(player.c.working.mul(Decimal.add(500).mul(player.c.jewelry_shopeff))) && player.c.gamemode.eq(0) && getBuyableAmount("qu",11).gte(5)){
 			player.s.points = player.s.points.sub(player.c.working.mul(0.2).mul(diff))
