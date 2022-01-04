@@ -537,7 +537,7 @@ addLayer("i", {
 			title: "进行镶嵌",
 			display() {return player.i.gamemode.eq(1) ? "已开启镶嵌" : ""},
 			canClick(){return true},
-			unlocked(){return player.i.gamemode.eq(2) || player.i.gamemode.eq(0)},
+			unlocked(){return player.i.gamemode.eq(1) || player.i.gamemode.eq(0)},
 			onClick(){
 				if(!player.i.gamemode.eq(0)){
 					player.i.gamemode = new Decimal(0)
@@ -1034,9 +1034,6 @@ addLayer("cb", {
 				player.cb.upgrades = []
 				player.b.points = new Decimal(0)
 				player.b.energy = new Decimal(0)
-			},
-			effect(){
-				return 1
 			},
 		},
 	},
